@@ -1,0 +1,14 @@
+/* 
+  Localizable.strings
+  AtlasReserve
+
+  Created by Hengyu Mei on 7/1/23.
+  
+*/
+"app-name"="Atlas Réserve";
+"reserve-a-court"="Réservé un terrain de foot";
+"play-football"="Joué un match de foot avec vos amis";
+"sign-up"="Créer un compte Atlas Réserve";
+"already-have-account"="Avez-vous déjà un compte?";
+"log-in"="Enregistrez-vous";
+
