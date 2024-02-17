@@ -111,7 +111,6 @@ struct CourtInformationManageView: View {
         }.padding()
             .onAppear {
                 if self.isModifying {
-                    print(account.courts[self.courtIndex].previewImage)
                     self.courtPreviewImage = Image(uiImage: account.courts[self.courtIndex].previewImage)
                 } else {
                     self.courtPreviewImage = Image(uiImage: UIImage(systemName: "folder")!)

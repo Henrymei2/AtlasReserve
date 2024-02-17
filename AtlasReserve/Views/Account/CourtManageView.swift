@@ -32,6 +32,14 @@ struct CourtManageView: View {
                     Spacer()
                     Image(systemName: "chevron.right").foregroundStyle(.black)
                 }.padding()
+                NavigationLink (destination: ReservationManageView(court: self.court).environmentObject(account)
+                    .onAppear {
+                        account.responses["reservationsByCourtIDFetch"] = 0
+                    }) {
+                    Text("Manage Reservations").font(.title2).foregroundStyle(.black)
+                    Spacer()
+                    Image(systemName: "chevron.right").foregroundStyle(.black)
+                }.padding()
                 Text("Manage Fields").font(.title)
                 Button("Discard All Changes") {
                     account.responses["fieldFetch"] = 0
@@ -72,6 +80,6 @@ struct CourtManageView: View {
 #Preview {
     NavigationStack {
         //CourtManageView(court:Court(id: 1, name: "A", owner: "B", address: "C", courtNumber: 1, previewImage: UIImage())).environmentObject(Account())
-        
+        OwnerControlView().environmentObject(Account())
     }
 }

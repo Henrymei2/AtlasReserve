@@ -36,6 +36,7 @@
 		329CE1232A963E6D008EE598 /* CalendarPage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 329CE1222A963E6D008EE598 /* CalendarPage.swift */; };
 		32C3A0842B74FAFE00462D42 /* Reservation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 32C3A0832B74FAFE00462D42 /* Reservation.swift */; };
 		32C887C42B80BF0A00D776FF /* Kingfisher in Frameworks */ = {isa = PBXBuildFile; productRef = 32C887C32B80BF0A00D776FF /* Kingfisher */; };
+		32C887C82B8110B800D776FF /* ReservationManageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 32C887C72B8110B800D776FF /* ReservationManageView.swift */; };
 		32D489AC2B6D1BC900D52D80 /* Field.swift in Sources */ = {isa = PBXBuildFile; fileRef = 32D489AB2B6D1BC800D52D80 /* Field.swift */; };
 		32D489AE2B6D207800D52D80 /* FieldView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 32D489AD2B6D207800D52D80 /* FieldView.swift */; };
 		32F44F6A2B76578000CBBBAE /* RequestResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = 32F44F692B76578000CBBBAE /* RequestResult.swift */; };
@@ -93,6 +94,7 @@
 		329CE11E2A9605BD008EE598 /* Calendar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Calendar.swift; sourceTree = "<group>"; };
 		329CE1222A963E6D008EE598 /* CalendarPage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalendarPage.swift; sourceTree = "<group>"; };
 		32C3A0832B74FAFE00462D42 /* Reservation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Reservation.swift; sourceTree = "<group>"; };
+		32C887C72B8110B800D776FF /* ReservationManageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReservationManageView.swift; sourceTree = "<group>"; };
 		32D489AB2B6D1BC800D52D80 /* Field.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Field.swift; sourceTree = "<group>"; };
 		32D489AD2B6D207800D52D80 /* FieldView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FieldView.swift; sourceTree = "<group>"; };
 		32F44F692B76578000CBBBAE /* RequestResult.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RequestResult.swift; sourceTree = "<group>"; };
@@ -238,6 +240,7 @@
 				324FA0F92B79FA6300151084 /* CourtManageView.swift */,
 				328BCC8A2B7B6FCB009B85A2 /* FieldManageView.swift */,
 				3239617F2B7CB236006F2F6F /* CourtInformationManageView.swift */,
+				32C887C72B8110B800D776FF /* ReservationManageView.swift */,
 			);
 			path = Account;
 			sourceTree = "<group>";
@@ -425,6 +428,7 @@
 				32C3A0842B74FAFE00462D42 /* Reservation.swift in Sources */,
 				32F4DD0E2A50D18F00BB88FC /* ChangeLanguage.swift in Sources */,
 				32F4DD012A50C1C200BB88FC /* StartingPage.swift in Sources */,
+				32C887C82B8110B800D776FF /* ReservationManageView.swift in Sources */,
 				32F44F6A2B76578000CBBBAE /* RequestResult.swift in Sources */,
 				3245CB252A51F5970056DF85 /* RegisterPage.swift in Sources */,
 				326BA31E2A923DF400DB9B79 /* CourtCard.swift in Sources */,

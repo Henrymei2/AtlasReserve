@@ -31,6 +31,8 @@ class Account:ObservableObject{
         "fieldAvailableFetch": 0,
         // 1: fetch completed
         "reservationsByUserIDFetch": 0,
+        // 1: fetch completed
+        "reservationsByCourtIDFetch": 0,
         /*
          * 1: Cannot add because entered information contains error: such as startTime > endTime
          * 2: Cannot add field because other unhandled issues
@@ -438,6 +440,54 @@ class Account:ObservableObject{
                 }
             }
             self.responses["reservationsByUserIDFetch"] = 1;
+        }
+    }
+    func getReservationsByCourtID(courtID: Int) -> Void{
+        let url = URL(string: "https://atlasreserve.ma/index.php")!
+        var request = URLRequest(url: url)
+        let parameters: String = "type=GETRESERVATIONSBYCOURTID&id=\(courtID)"
+        request.httpMethod = "POST"
+        request.httpBody = parameters.data(using:.utf8)
+        let group = DispatchGroup()
+        group.enter()
+        var response = "Error"
+        self.reservations = []
+        self.responses["reservationsByCourtIDFetch"] = 0
+        DispatchQueue.global(qos:.default).async {
+            self.getResponse(withRequest: request, withCompletion: {detail in response = detail ?? "404"; group.leave()})
+        }
+        group.notify(queue: DispatchQueue.main) {
+            if let data = response.data(using: .utf8) {
+                do {
+                    if let json = try JSONSerialization.jsonObject(with: data, options: []) as? [String: Any] {
+                        for (_, value) in json {
+                            guard let each = value as? [String:Any] else {
+                                print("Error")
+                                return
+                            }
+                            self.reservations.append(
+                                Reservation(
+                                    id: Int(each["resID"] as! String) ?? 0,
+                                    field: Int(each["fieldID"] as! String) ?? 0,
+                                    date: each["date"] as! String,
+                                    resType: Int(each["type"] as! String) ?? 0,
+                                    startTime: each["startTime"] as! String,
+                                    endTime: each["endTime"] as! String
+                                )
+                            )
+                            
+                            self.reservations.sort{(lhs, rhs) -> Bool in
+                                return lhs.startTime < rhs.startTime
+                            }
+                            
+                        }
+                    }
+                    
+                } catch {
+                    print("Error parsing JSON: \(error)")
+                }
+            }
+            self.responses["reservationsByCourtIDFetch"] = 1;
         }
     }
     func addField(courtID: Int, type: Int, startTime: Date, endTime: Date, count: Int, availability: [Bool]) -> Void {
