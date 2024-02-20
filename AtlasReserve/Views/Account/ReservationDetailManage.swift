@@ -99,7 +99,7 @@ struct ReservationDetailManage: View {
                         Text("An unhandled error occured")
                     }.environmentObject(account)
                         .onAppear {
-                            account.cancelReservation(resID: reservation.id, courtID: field.courtID, userID: account.id, reason: reasonForCancel, by: 3)
+                            account.cancelReservation(resID: reservation.id, courtID: field.courtID, userID: account.id, reason: reasonForCancel, by: 3, resType: reservation.resType, date: reservation.date, fieldID: self.field.id)
                         }
                 } label: {
                     ZStack{

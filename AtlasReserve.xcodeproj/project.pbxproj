@@ -11,6 +11,7 @@
 		3218F71B2A973B1200E0EB67 /* LoadingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3218F71A2A973B1200E0EB67 /* LoadingView.swift */; };
 		322279F02B6C129300BAFD4F /* CourtDetailsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 322279EF2B6C129300BAFD4F /* CourtDetailsView.swift */; };
 		322279F22B6C2F2500BAFD4F /* AccountView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 322279F12B6C2F2500BAFD4F /* AccountView.swift */; };
+		32361E152B84DE42008D3DAE /* CreateReservation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 32361E142B84DE42008D3DAE /* CreateReservation.swift */; };
 		323961802B7CB236006F2F6F /* CourtInformationManageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3239617F2B7CB236006F2F6F /* CourtInformationManageView.swift */; };
 		3245CB252A51F5970056DF85 /* RegisterPage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3245CB242A51F5970056DF85 /* RegisterPage.swift */; };
 		3245CB272A51FDA10056DF85 /* Account.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3245CB262A51FDA10056DF85 /* Account.swift */; };
@@ -31,6 +32,9 @@
 		326BA31C2A923C5100DB9B79 /* CourtView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 326BA31B2A923C5100DB9B79 /* CourtView.swift */; };
 		326BA31E2A923DF400DB9B79 /* CourtCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 326BA31D2A923DF400DB9B79 /* CourtCard.swift */; };
 		326BA3202A923F3000DB9B79 /* Court.swift in Sources */ = {isa = PBXBuildFile; fileRef = 326BA31F2A923F3000DB9B79 /* Court.swift */; };
+		32750FA82B851B730013EE85 /* ReservationManage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 32750FA72B851B730013EE85 /* ReservationManage.swift */; };
+		32750FAA2B8547220013EE85 /* ReservationHistory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 32750FA92B8547220013EE85 /* ReservationHistory.swift */; };
+		32750FAC2B8548B20013EE85 /* Archive.swift in Sources */ = {isa = PBXBuildFile; fileRef = 32750FAB2B8548B20013EE85 /* Archive.swift */; };
 		328BCC8B2B7B6FCB009B85A2 /* FieldManageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 328BCC8A2B7B6FCB009B85A2 /* FieldManageView.swift */; };
 		328BCC8D2B7BA0ED009B85A2 /* FieldType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 328BCC8C2B7BA0ED009B85A2 /* FieldType.swift */; };
 		329CE11F2A9605BD008EE598 /* Calendar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 329CE11E2A9605BD008EE598 /* Calendar.swift */; };
@@ -69,6 +73,7 @@
 		3218F71A2A973B1200E0EB67 /* LoadingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoadingView.swift; sourceTree = "<group>"; };
 		322279EF2B6C129300BAFD4F /* CourtDetailsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CourtDetailsView.swift; sourceTree = "<group>"; };
 		322279F12B6C2F2500BAFD4F /* AccountView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountView.swift; sourceTree = "<group>"; };
+		32361E142B84DE42008D3DAE /* CreateReservation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateReservation.swift; sourceTree = "<group>"; };
 		3239617F2B7CB236006F2F6F /* CourtInformationManageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CourtInformationManageView.swift; sourceTree = "<group>"; };
 		3245CB242A51F5970056DF85 /* RegisterPage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegisterPage.swift; sourceTree = "<group>"; };
 		3245CB262A51FDA10056DF85 /* Account.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Account.swift; sourceTree = "<group>"; };
@@ -92,6 +97,9 @@
 		326BA31B2A923C5100DB9B79 /* CourtView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CourtView.swift; sourceTree = "<group>"; };
 		326BA31D2A923DF400DB9B79 /* CourtCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CourtCard.swift; sourceTree = "<group>"; };
 		326BA31F2A923F3000DB9B79 /* Court.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Court.swift; sourceTree = "<group>"; };
+		32750FA72B851B730013EE85 /* ReservationManage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReservationManage.swift; sourceTree = "<group>"; };
+		32750FA92B8547220013EE85 /* ReservationHistory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReservationHistory.swift; sourceTree = "<group>"; };
+		32750FAB2B8548B20013EE85 /* Archive.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Archive.swift; sourceTree = "<group>"; };
 		328BCC8A2B7B6FCB009B85A2 /* FieldManageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FieldManageView.swift; sourceTree = "<group>"; };
 		328BCC8C2B7BA0ED009B85A2 /* FieldType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FieldType.swift; sourceTree = "<group>"; };
 		329CE11E2A9605BD008EE598 /* Calendar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Calendar.swift; sourceTree = "<group>"; };
@@ -232,6 +240,7 @@
 			children = (
 				329CE1222A963E6D008EE598 /* CalendarPage.swift */,
 				326A0C6A2B78A743002F8687 /* ReservationView.swift */,
+				32750FA72B851B730013EE85 /* ReservationManage.swift */,
 			);
 			path = Calendar;
 			sourceTree = "<group>";
@@ -246,6 +255,8 @@
 				3239617F2B7CB236006F2F6F /* CourtInformationManageView.swift */,
 				32C887C72B8110B800D776FF /* ReservationManageView.swift */,
 				32F3FD962B836E920010D6C4 /* ReservationDetailManage.swift */,
+				32361E142B84DE42008D3DAE /* CreateReservation.swift */,
+				32750FA92B8547220013EE85 /* ReservationHistory.swift */,
 			);
 			path = Account;
 			sourceTree = "<group>";
@@ -270,6 +281,7 @@
 				32D489AB2B6D1BC800D52D80 /* Field.swift */,
 				32C3A0832B74FAFE00462D42 /* Reservation.swift */,
 				325123A62B8253F400ABAC28 /* User.swift */,
+				32750FAB2B8548B20013EE85 /* Archive.swift */,
 			);
 			path = Controllers;
 			sourceTree = "<group>";
@@ -437,17 +449,21 @@
 				32F4DD012A50C1C200BB88FC /* StartingPage.swift in Sources */,
 				32C887C82B8110B800D776FF /* ReservationManageView.swift in Sources */,
 				32F44F6A2B76578000CBBBAE /* RequestResult.swift in Sources */,
+				32750FAA2B8547220013EE85 /* ReservationHistory.swift in Sources */,
 				32F3FD972B836E920010D6C4 /* ReservationDetailManage.swift in Sources */,
 				3245CB252A51F5970056DF85 /* RegisterPage.swift in Sources */,
 				326BA31E2A923DF400DB9B79 /* CourtCard.swift in Sources */,
 				326BA31A2A923BDD00DB9B79 /* HomeView.swift in Sources */,
 				326A0C6B2B78A743002F8687 /* ReservationView.swift in Sources */,
+				32750FA82B851B730013EE85 /* ReservationManage.swift in Sources */,
+				32750FAC2B8548B20013EE85 /* Archive.swift in Sources */,
 				3218F71B2A973B1200E0EB67 /* LoadingView.swift in Sources */,
 				3245CB292A520DA60056DF85 /* LoginPage.swift in Sources */,
 				32681BCA2A508C8B00EA9ED5 /* AtlasReserveApp.swift in Sources */,
 				326A0C722B78E83B002F8687 /* OwnerControlView.swift in Sources */,
 				32D489AE2B6D207800D52D80 /* FieldView.swift in Sources */,
 				329CE11F2A9605BD008EE598 /* Calendar.swift in Sources */,
+				32361E152B84DE42008D3DAE /* CreateReservation.swift in Sources */,
 				320444312A5C635A00D426BF /* BottomNavigation.swift in Sources */,
 				324FA0FA2B79FA6300151084 /* CourtManageView.swift in Sources */,
 				32D489AC2B6D1BC900D52D80 /* Field.swift in Sources */,

@@ -40,6 +40,14 @@ struct CourtManageView: View {
                     Spacer()
                     Image(systemName: "chevron.right").foregroundStyle(.black)
                 }.padding()
+                NavigationLink (destination: ReservationHistory(courtID: self.court.id).environmentObject(account)
+                    .onAppear {
+                        account.responses["archivedReservationsFetch"] = 0
+                    }) {
+                    Text("View Past Reservations").font(.title2).foregroundStyle(.black)
+                    Spacer()
+                    Image(systemName: "chevron.right").foregroundStyle(.black)
+                }.padding()
                 Text("Manage Fields").font(.title)
                 Button("Discard All Changes") {
                     account.responses["fieldFetch"] = 0

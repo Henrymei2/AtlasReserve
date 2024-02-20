@@ -37,12 +37,14 @@ struct FieldManageView: View {
     @State private var pendingFieldCount: Int = 1;
     @State private var pendingFieldEndTime: Date = Date()
     @State private var pendingFieldAvailabilityArray: [Bool] = [false,false,false,false,false,false,false]
-    init(field: Int, courtID: Int = 0) {
+    private var readOnly: Bool = false; // This variable is set to true to remove the delete and create button
+    init(field: Int, courtID: Int = 0, readOnly: Bool = false) {
         self.field = field
         self.timeFormatter.dateFormat = "HH:mm"
         self.pendingFieldStartTime = timeFormatter.date(from: "00:00")!
         self.pendingFieldEndTime = timeFormatter.date(from: "00:00")!
         self.courtID = courtID
+        self.readOnly = readOnly
     }
     
     var body: some View {
@@ -54,7 +56,7 @@ struct FieldManageView: View {
                         ForEach(FieldType.types, id: \.self) { type in
                             Text(String(type))
                         }
-                    }
+                    }.disabled(self.readOnly)
                 }
                 VStack{
                     Text("Count")
@@ -63,6 +65,7 @@ struct FieldManageView: View {
                         Text("Field Count")
                     }.textFieldStyle(.roundedBorder).multilineTextAlignment(.center)
                         .frame(maxWidth: 50)
+                        .disabled(self.readOnly)
                 }
                 VStack{
                     Text("Start Time")
@@ -74,6 +77,7 @@ struct FieldManageView: View {
                     } label: {
                         Text(timeFormatter.string(from: (self.field >= 0 ) ? account.fieldsManage[self.field].startTime : pendingFieldStartTime))
                     }.frame(minWidth: 100)
+                        .disabled(self.readOnly)
                 }.lineLimit(2, reservesSpace: true)
                 VStack{
                     Text("End Time")
@@ -85,43 +89,51 @@ struct FieldManageView: View {
                     } label: {
                         Text(timeFormatter.string(from: (self.field >= 0 ) ? account.fieldsManage[self.field].endTime : pendingFieldEndTime))
                     }.frame(minWidth: 100)
+                        .disabled(self.readOnly)
                 }.lineLimit(2, reservesSpace: true)
                 VStack{
                     Text("Mon")
                     Toggle("", isOn: (self.field >= 0 ) ? $account.fieldsManage[self.field].availabilityArray[0]: $pendingFieldAvailabilityArray[0]) .toggleStyle(CheckToggleStyle())
+                        .disabled(self.readOnly)
                 }
                 VStack{
                     Text("Tue")
                     Toggle("", isOn:  (self.field >= 0 ) ? $account.fieldsManage[self.field].availabilityArray[1]: $pendingFieldAvailabilityArray[1]).toggleStyle(CheckToggleStyle())
+                        .disabled(self.readOnly)
                 }
                 VStack{
                     Text("Wed")
                     Toggle("", isOn:  (self.field >= 0 ) ? $account.fieldsManage[self.field].availabilityArray[2]: $pendingFieldAvailabilityArray[2]).toggleStyle(CheckToggleStyle())
+                        .disabled(self.readOnly)
                 }
                 VStack{
                     Text("Thu")
                     Toggle("", isOn:  (self.field >= 0 ) ? $account.fieldsManage[self.field].availabilityArray[3]: $pendingFieldAvailabilityArray[3]).toggleStyle(CheckToggleStyle())
+                        .disabled(self.readOnly)
                 }
                 VStack{
                     Text("Fri")
                     Toggle("", isOn:  (self.field >= 0 ) ? $account.fieldsManage[self.field].availabilityArray[4]: $pendingFieldAvailabilityArray[4]).toggleStyle(CheckToggleStyle())
+                        .disabled(self.readOnly)
                 }
                 VStack{
                     Text("Sat")
                     Toggle("", isOn:  (self.field >= 0 ) ? $account.fieldsManage[self.field].availabilityArray[5]: $pendingFieldAvailabilityArray[5]).toggleStyle(CheckToggleStyle())
+                        .disabled(self.readOnly)
                 }
                 VStack{
                     Text("Sun")
                     Toggle("", isOn:  (self.field >= 0 ) ? $account.fieldsManage[self.field].availabilityArray[6]: $pendingFieldAvailabilityArray[6]).toggleStyle(CheckToggleStyle())
+                        .disabled(self.readOnly)
                 }
-                if self.field >= 0 {
+                if self.field >= 0 && (!self.readOnly) {
                     VStack {
                         Text("Delete")
                         Button {
                             showAlert = true
                         } label: {
                             Text("Delete").foregroundStyle(.red)
-                        }.alert("Confirm Delete", isPresented: $showAlert) {
+                        }.alert("Confirm Delete. Note: Deleting the field will result in all past and present reservations associated with the field to be deleted!", isPresented: $showAlert) {
                             HStack{
                                 Button (role: .cancel) {
                                     showAlert = false

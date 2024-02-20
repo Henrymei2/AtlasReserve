@@ -54,7 +54,7 @@ struct OwnerControlView: View {
                                     showAlert = true
                                 } label: {
                                     Text("Delete").foregroundStyle(.red)
-                                }.alert("Confirm Delete", isPresented: $showAlert) {
+                                }.alert("Confirm Delete. Note: Deleting the court will result in all past and present reservations associated with this court to be deleted!", isPresented: $showAlert) {
                                     Button (role: .cancel) {
                                         showAlert = false
                                     } label: {

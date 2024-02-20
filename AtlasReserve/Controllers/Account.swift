@@ -254,12 +254,28 @@ class Account:ObservableObject{
             self.responses["courtFetch"] = 1;
         }
     }
-    /* reserveCourt:
-     * @return: a integer representing the return state of the function
-     * 1: Cannot reserve because the some other users including themselves has already reserved this field
-     * 2: Cannot reserve because other unhandled issues
-     * 3: Successfully made the reservation
-     */
+    func reserve(fieldID: Int, date: Date, type: Int) {
+        self.responses["reserve"] = 0
+        let url = URL(string: "https://atlasreserve.ma/index.php")!
+        var request = URLRequest(url: url)
+        let parameters: String = "type=RESERVE&fieldID=\(fieldID)&date=\(DateFormatter.yearMonthDay.string(from: date))&userID=\(self.id)&t=\(type)"
+        request.httpMethod = "POST"
+        request.httpBody = parameters.data(using:.utf8)
+        let group = DispatchGroup()
+        group.enter()
+        var response = "404"
+        DispatchQueue.global(qos:.default).async {
+            self.getResponse(withRequest: request, withCompletion: {detail in response = detail ?? "404"; group.leave()})
+        }
+        group.notify(queue: DispatchQueue.main) {
+            if response != "200" {
+                self.responses["reserve"] = 2
+            } else {
+                self.responses["reserve"] = 3
+            }
+        }
+    }
+    
     func reserveCourt(fieldID: Int, date: Date) -> Void {
         let group2 = DispatchGroup() // This group is for fetching the reserve status of the court
         self.responses["reserve"] = 0
@@ -283,23 +299,7 @@ class Account:ObservableObject{
             if !available {
                 self.responses["reserve"] = 1
             } else {
-                var request = URLRequest(url: url)
-                let parameters: String = "type=RESERVE&fieldID=\(fieldID)&date=\(dateFormatter.string(from: date))&userID=\(self.id)&t=1"
-                request.httpMethod = "POST"
-                request.httpBody = parameters.data(using:.utf8)
-                let group = DispatchGroup()
-                group.enter()
-                var response = "404"
-                DispatchQueue.global(qos:.default).async {
-                    self.getResponse(withRequest: request, withCompletion: {detail in response = detail ?? "404"; group.leave()})
-                }
-                group.notify(queue: DispatchQueue.main) {
-                    if response != "200" {
-                        self.responses["reserve"] = 2
-                    } else {
-                        self.responses["reserve"] = 3
-                    }
-                }
+                self.reserve(fieldID: fieldID, date: date, type: 1) // 1: user reserved
             }
         }
         
@@ -804,10 +804,11 @@ class Account:ObservableObject{
             self.responses["userByUserIDFetch"] = 1;
         }
     }
-    func cancelReservation(resID: Int, courtID: Int, userID: Int, reason: String, by: Int) -> Void {
+    func cancelReservation(resID: Int, courtID: Int, userID: Int, reason: String, by: Int, resType: Int, date: Date, fieldID: Int) -> Void {
         // @param by -> either the court(3) or the user(2)
+        let formattedDate = DateFormatter.yearMonthDay.string(from: date)
         self.responses["cancelReservation"] = 0
-        let parameters: String = "type=CANCELRESERVATION&userID=\(userID)&courtID=\(courtID)&resID=\(resID)&reason=\(reason)&by=\(by)"
+        let parameters: String = "type=CANCELRESERVATION&userID=\(userID)&courtID=\(courtID)&resID=\(resID)&reason=\(reason)&by=\(by)&date=\(formattedDate)&resType=\(resType)&fieldID=\(fieldID)"
         let url = URL(string: "https://atlasreserve.ma/index.php")!
         let group = DispatchGroup()
         group.enter()

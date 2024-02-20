@@ -27,14 +27,22 @@ struct ReservationView: View {
                 ForEach(account.reservations, id: \.id) { i in
                     if (i.date == account.currentDay) {
                         Divider()
-                        HStack{
-                            Text(account.courts[account.courts.firstIndex(where: { court in
-                                return court.id == i.courtID
-                            }) ?? 0].name)
-                            Text(String(i.resType))
-                        }
-                        HStack{
-                            Text(i.startTime + "-" + i.endTime)
+                        NavigationLink {
+                            ReservationManage(reservation: i, fieldID: i.field, courtID: i.courtID).environmentObject(account)
+                        } label: {
+                            HStack{
+                                HStack{
+                                    Text(account.courts[account.courts.firstIndex(where: { court in
+                                        return court.id == i.courtID
+                                    }) ?? 0].name)
+                                    Text(String(i.resType))
+                                }
+                                Text(i.startTime + "-" + i.endTime)
+                                
+                                Image(systemName: "chevron.right").padding()
+                                    .frame(alignment: .trailing)
+                                    .foregroundStyle(.blue)
+                            }.foregroundStyle(.black)
                         }
                     }
                 }
@@ -46,5 +54,7 @@ struct ReservationView: View {
 }
 
 #Preview {
-    ReservationView().environmentObject(Account())
+    NavigationStack {
+        ReservationView().environmentObject(Account())
+    }
 }

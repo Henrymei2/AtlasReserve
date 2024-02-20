@@ -21,10 +21,7 @@ struct ReservationManageView: View {
                 Spacer()
             
             }.padding()
-            NavigationLink (destination: ReservationManageView(court: self.court).environmentObject(account) // TODO: change to createReservationView
-                .onAppear {
-                    account.responses["reservationsByCourtIDFetch"] = 0
-                }) {
+            NavigationLink (destination: CreateReservation(courtID: self.court.id).environmentObject(account)) {
                 Text("Manually Create Reservation").font(.title2).foregroundStyle(.black)
                 Spacer()
                 Image(systemName: "chevron.right").foregroundStyle(.black)
@@ -80,8 +77,7 @@ struct ReservationManageView: View {
             }
             
         }.refreshable {
-            account.responses["reservationByCourtIDFetch"] = 0
-            account.responses["fieldFetch"] = 0
+            account.responses["reservationsByCourtIDFetch"] = 0
         }
         
     }

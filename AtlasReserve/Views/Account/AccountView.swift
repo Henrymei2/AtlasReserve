@@ -24,8 +24,8 @@ struct AccountView: View {
                 Spacer()
                 Image(systemName: "chevron.right").foregroundStyle(.black)
             }.padding()
-            NavigationLink (destination: OwnerControlView().environmentObject(account)) {
-                Text("Court Owner Control Panel").font(.title2).foregroundStyle(.black)
+            NavigationLink (destination: ReservationHistory(courtID: 0).environmentObject(account)) {
+                Text("Reservation History").font(.title2).foregroundStyle(.black)
                 Spacer()
                 Image(systemName: "chevron.right").foregroundStyle(.black)
             }.padding()
