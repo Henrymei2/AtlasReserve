@@ -18,7 +18,9 @@ class Reservation {
     var resType: Int;
     var startTime: String;
     var endTime: String;
-    init(id: Int, field: Int, date: String, courtID: Int = 0, resType: Int = 0, startTime: String = "", endTime: String = "") {
+    // The following attributes are only needed for reservation management
+    var userID: Int;
+    init(id: Int, field: Int, date: String, courtID: Int = 0, resType: Int = 0, startTime: String = "", endTime: String = "", userID: Int = 0) {
         let dateFormatter = DateFormatter.yearMonthDay
         self.id = id
         self.field = field
@@ -27,6 +29,7 @@ class Reservation {
         self.resType = resType
         self.startTime = startTime
         self.endTime = endTime
+        self.userID = userID
     }
     
 }

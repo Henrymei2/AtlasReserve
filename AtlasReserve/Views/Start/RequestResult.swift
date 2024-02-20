@@ -47,7 +47,7 @@ struct RequestResult: View {
                     .font(.title2)
                     .padding()
                 if (account.responses[self.responseKey] != self.successCode) {
-                    self.fail(self.successCode)
+                    self.fail(account.responses[self.responseKey]!)
                 }
             }
         }

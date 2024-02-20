@@ -16,6 +16,7 @@
 		3245CB272A51FDA10056DF85 /* Account.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3245CB262A51FDA10056DF85 /* Account.swift */; };
 		3245CB292A520DA60056DF85 /* LoginPage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3245CB282A520DA60056DF85 /* LoginPage.swift */; };
 		324FA0FA2B79FA6300151084 /* CourtManageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 324FA0F92B79FA6300151084 /* CourtManageView.swift */; };
+		325123A72B8253F400ABAC28 /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = 325123A62B8253F400ABAC28 /* User.swift */; };
 		3264968A2B71806C007A3A05 /* DayOfWeek.swift in Sources */ = {isa = PBXBuildFile; fileRef = 326496892B71806C007A3A05 /* DayOfWeek.swift */; };
 		32681BCA2A508C8B00EA9ED5 /* AtlasReserveApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 32681BC92A508C8B00EA9ED5 /* AtlasReserveApp.swift */; };
 		32681BCC2A508C8B00EA9ED5 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 32681BCB2A508C8B00EA9ED5 /* ContentView.swift */; };
@@ -39,6 +40,7 @@
 		32C887C82B8110B800D776FF /* ReservationManageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 32C887C72B8110B800D776FF /* ReservationManageView.swift */; };
 		32D489AC2B6D1BC900D52D80 /* Field.swift in Sources */ = {isa = PBXBuildFile; fileRef = 32D489AB2B6D1BC800D52D80 /* Field.swift */; };
 		32D489AE2B6D207800D52D80 /* FieldView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 32D489AD2B6D207800D52D80 /* FieldView.swift */; };
+		32F3FD972B836E920010D6C4 /* ReservationDetailManage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 32F3FD962B836E920010D6C4 /* ReservationDetailManage.swift */; };
 		32F44F6A2B76578000CBBBAE /* RequestResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = 32F44F692B76578000CBBBAE /* RequestResult.swift */; };
 		32F4DD012A50C1C200BB88FC /* StartingPage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 32F4DD002A50C1C200BB88FC /* StartingPage.swift */; };
 		32F4DD082A50C88F00BB88FC /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 32F4DD0A2A50C88F00BB88FC /* Localizable.strings */; };
@@ -72,6 +74,7 @@
 		3245CB262A51FDA10056DF85 /* Account.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Account.swift; sourceTree = "<group>"; };
 		3245CB282A520DA60056DF85 /* LoginPage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginPage.swift; sourceTree = "<group>"; };
 		324FA0F92B79FA6300151084 /* CourtManageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CourtManageView.swift; sourceTree = "<group>"; };
+		325123A62B8253F400ABAC28 /* User.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
 		326496892B71806C007A3A05 /* DayOfWeek.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DayOfWeek.swift; sourceTree = "<group>"; };
 		32681BC62A508C8B00EA9ED5 /* AtlasReserve.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = AtlasReserve.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		32681BC92A508C8B00EA9ED5 /* AtlasReserveApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AtlasReserveApp.swift; sourceTree = "<group>"; };
@@ -97,6 +100,7 @@
 		32C887C72B8110B800D776FF /* ReservationManageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReservationManageView.swift; sourceTree = "<group>"; };
 		32D489AB2B6D1BC800D52D80 /* Field.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Field.swift; sourceTree = "<group>"; };
 		32D489AD2B6D207800D52D80 /* FieldView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FieldView.swift; sourceTree = "<group>"; };
+		32F3FD962B836E920010D6C4 /* ReservationDetailManage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReservationDetailManage.swift; sourceTree = "<group>"; };
 		32F44F692B76578000CBBBAE /* RequestResult.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RequestResult.swift; sourceTree = "<group>"; };
 		32F4DD002A50C1C200BB88FC /* StartingPage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StartingPage.swift; sourceTree = "<group>"; usesTabs = 1; };
 		32F4DD092A50C88F00BB88FC /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
@@ -241,6 +245,7 @@
 				328BCC8A2B7B6FCB009B85A2 /* FieldManageView.swift */,
 				3239617F2B7CB236006F2F6F /* CourtInformationManageView.swift */,
 				32C887C72B8110B800D776FF /* ReservationManageView.swift */,
+				32F3FD962B836E920010D6C4 /* ReservationDetailManage.swift */,
 			);
 			path = Account;
 			sourceTree = "<group>";
@@ -264,6 +269,7 @@
 				326BA31F2A923F3000DB9B79 /* Court.swift */,
 				32D489AB2B6D1BC800D52D80 /* Field.swift */,
 				32C3A0832B74FAFE00462D42 /* Reservation.swift */,
+				325123A62B8253F400ABAC28 /* User.swift */,
 			);
 			path = Controllers;
 			sourceTree = "<group>";
@@ -426,10 +432,12 @@
 				328BCC8B2B7B6FCB009B85A2 /* FieldManageView.swift in Sources */,
 				322279F22B6C2F2500BAFD4F /* AccountView.swift in Sources */,
 				32C3A0842B74FAFE00462D42 /* Reservation.swift in Sources */,
+				325123A72B8253F400ABAC28 /* User.swift in Sources */,
 				32F4DD0E2A50D18F00BB88FC /* ChangeLanguage.swift in Sources */,
 				32F4DD012A50C1C200BB88FC /* StartingPage.swift in Sources */,
 				32C887C82B8110B800D776FF /* ReservationManageView.swift in Sources */,
 				32F44F6A2B76578000CBBBAE /* RequestResult.swift in Sources */,
+				32F3FD972B836E920010D6C4 /* ReservationDetailManage.swift in Sources */,
 				3245CB252A51F5970056DF85 /* RegisterPage.swift in Sources */,
 				326BA31E2A923DF400DB9B79 /* CourtCard.swift in Sources */,
 				326BA31A2A923BDD00DB9B79 /* HomeView.swift in Sources */,

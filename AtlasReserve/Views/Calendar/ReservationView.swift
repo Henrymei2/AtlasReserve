@@ -14,11 +14,11 @@ struct ReservationView: View {
         timeFormatter.dateFormat = "HH:mm"
     }
     var body: some View {
-        if !(account.responses["courtFetch"] == 1) {
+        if account.responses["courtFetch"] == 0 {
             ProgressView("Loading Courts").onAppear {
                 account.getCourts()
             }
-        } else if !(account.responses["reservationsByUserIDFetch"] == 1) {
+        } else if account.responses["reservationsByUserIDFetch"] == 0 {
             ProgressView("Loading Reservations").onAppear {
                 account.getReservationsByUserID(userID: account.id)
             }

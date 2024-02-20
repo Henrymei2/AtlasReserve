@@ -55,7 +55,8 @@ struct FieldView: View {
                     if (field.isAvailableNow) {
                         NavigationLink(destination:     RequestResult(
                             loadingText: "Trying to make a reservation...", responseKey: "reserve", successCode: 3, fail: { code in
-                                return Text(code == 1 ? "While updating, it is discovered that there are no available places for this field" : "An error occured while updating the database")
+                                //print(code);
+                                return Text(code == 1 ? "This field becomes full as you are reserving or you have already reserved this field at this date" : "An error occured while updating the database")
                             }
                         ).environmentObject(account).onAppear {
                             account.reserveCourt(fieldID: field.id, date: nextDate)

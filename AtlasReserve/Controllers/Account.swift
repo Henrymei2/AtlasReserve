@@ -17,57 +17,64 @@ class Account:ObservableObject{
     @Published var isOwner = true; // TODO: Test
     @Published var response:String = "";
     @Published var responses:Dictionary = [
-        // 1: fetch completed
+        // courtFetch 1: fetch completed
         "courtFetch": 0,
-        // 1: fetch completed
+        // fieldFetch 1: fetch completed
         "fieldFetch": 0,
-        /*
+        /* reserve
          * 1: Cannot reserve because the some other users including themselves has already reserved this field
          * 2: Cannot reserve because other unhandled issues
          * 3: Successfully made the reservation
          */
         "reserve": 0,
-        // 1: fetch completed
+        // fieldAvailableFetch 1: fetch completed
         "fieldAvailableFetch": 0,
-        // 1: fetch completed
+        // reservationsByUserIDFetch 1: fetch completed
         "reservationsByUserIDFetch": 0,
-        // 1: fetch completed
+        // reservationsByCourtIDFetch 1: fetch completed
         "reservationsByCourtIDFetch": 0,
-        /*
+        /* addField
          * 1: Cannot add because entered information contains error: such as startTime > endTime
          * 2: Cannot add field because other unhandled issues
          * 3: Successfully added the field
          */
         "addField": 0,
-        /*
+        /* modifyField
          * 1: Cannot modify because entered information contains error: such as startTime > endTime
          * 2: Cannot modify field because other unhandled issues
          * 3: Successfully modified all the fields
          * 4: 4 to 4+number of modified fields -> n: Successfully modified n - 3 fields
          */
         "modifyField": 0,
-        /*
+        /* deleteField
          * 2: Cannot delete field because other unhandled issues
          * 3: Successfully deleted the field
          */
         "deleteField": 0,
-        /*
+        /* addCourt
          * 2: Cannot add court because other unhandled issues
          * 3: Successfully added the court
          */
         "addCourt": 0,
-        /*
+        /* modifyCourt
          * 1: Cannot modify court because entered information contains error.
          * 2: Cannot modify court because other unhandled issues
          * 3: Successfully modified the court
          */
         "modifyCourt": 0,
-        /*
+        /* deleteCourt
          * 1: Cannot modify court because entered information contains error.
          * 2: Cannot delete court because other unhandled issues
          * 3: Successfully deleted the court
          */
-        "deleteCourt": 0
+        "deleteCourt": 0,
+        // userByUserIDFetch 1: fetch completed
+        "userByUserIDFetch": 0,
+        /* cancelReservation
+         * 1: Cannot cancel because of handled issues
+         * 2: Successfully canceled the reservation
+         */
+        "cancelReservation": 0
         
     ];
     @Published var viewingPage:Int = 1;
@@ -75,6 +82,7 @@ class Account:ObservableObject{
     @Published var fields: [Field] = [Field(id: 1, type: 1, startTime: "00:01", endTime: "00:00", availability: 1, count: 1, courtID: 1)] // TODO: Test
     @Published var fieldsManage: [Field] = []; // This variable is only used for editing fields
     @Published var reservations: [Reservation] = []
+    @Published var fetchedUser: User = User(id: 0, username: "", telephone: "");
     @Published var resDates: [Date] = []
     @Published var currentDay: Date = DateFormatter.yearMonthDay.date(from: DateFormatter.yearMonthDay.string(from:Date())) ?? Date();
     @Published var PAGES: [Pages] = [
@@ -259,14 +267,14 @@ class Account:ObservableObject{
         let dateFormatter = DateFormatter.yearMonthDay
         var availableFieldCount = 0
         var availableFieldRequest = URLRequest(url: url)
-        let availableFieldParameters: String = "type=GETFIELDAVAILABILITY&date=\(dateFormatter.string(from:date))&fieldID=\(fieldID)&userID =\(self.id)"
+        let availableFieldParameters: String = "type=GETFIELDAVAILABILITY&date=\(dateFormatter.string(from:date))&fieldID=\(fieldID)&userID=\(self.id)"
         availableFieldRequest.httpMethod = "POST"
         availableFieldRequest.httpBody = availableFieldParameters.data(using:.utf8)
         group2.enter()
         DispatchQueue.global(qos:.default).async {
             self.getFieldAvailability(withRequest: availableFieldRequest) {
                 data in
-                availableFieldCount = data ?? 0;
+                availableFieldCount = Int(data ?? 0);
                 group2.leave()
             }
         }
@@ -274,24 +282,24 @@ class Account:ObservableObject{
             let available = availableFieldCount > 0
             if !available {
                 self.responses["reserve"] = 1
-                return;
-            }
-            var request = URLRequest(url: url)
-            let parameters: String = "type=RESERVE&fieldID=\(fieldID)&date=\(dateFormatter.string(from: date))&userID=\(self.id)&t=1"
-            request.httpMethod = "POST"
-            request.httpBody = parameters.data(using:.utf8)
-            let group = DispatchGroup()
-            group.enter()
-            var response = "404"
-            DispatchQueue.global(qos:.default).async {
-                self.getResponse(withRequest: request, withCompletion: {detail in response = detail ?? "404"; group.leave()})
-            }
-            group.notify(queue: DispatchQueue.main) {
-                if response != "200" {
-                    self.responses["reserve"] = 2
-                    return
+            } else {
+                var request = URLRequest(url: url)
+                let parameters: String = "type=RESERVE&fieldID=\(fieldID)&date=\(dateFormatter.string(from: date))&userID=\(self.id)&t=1"
+                request.httpMethod = "POST"
+                request.httpBody = parameters.data(using:.utf8)
+                let group = DispatchGroup()
+                group.enter()
+                var response = "404"
+                DispatchQueue.global(qos:.default).async {
+                    self.getResponse(withRequest: request, withCompletion: {detail in response = detail ?? "404"; group.leave()})
                 }
-                self.responses["reserve"] = 3
+                group.notify(queue: DispatchQueue.main) {
+                    if response != "200" {
+                        self.responses["reserve"] = 2
+                    } else {
+                        self.responses["reserve"] = 3
+                    }
+                }
             }
         }
         
@@ -472,7 +480,8 @@ class Account:ObservableObject{
                                     date: each["date"] as! String,
                                     resType: Int(each["type"] as! String) ?? 0,
                                     startTime: each["startTime"] as! String,
-                                    endTime: each["endTime"] as! String
+                                    endTime: each["endTime"] as! String,
+                                    userID: Int(each["userID"] as! String) ?? 0
                                 )
                             )
                             
@@ -759,7 +768,69 @@ class Account:ObservableObject{
             }
         }
     }
-    
+    func getUserByUserID(userID: Int) -> Void{
+        let url = URL(string: "https://atlasreserve.ma/index.php")!
+        var request = URLRequest(url: url)
+        let parameters: String = "type=GETUSERBYUSERID&id=\(userID)"
+        request.httpMethod = "POST"
+        request.httpBody = parameters.data(using:.utf8)
+        let group = DispatchGroup()
+        group.enter()
+        var response = "Error"
+        DispatchQueue.global(qos:.default).async {
+            self.getResponse(withRequest: request, withCompletion: {detail in response = detail ?? "404"; group.leave()})
+        }
+        group.notify(queue: DispatchQueue.main) {
+            if let data = response.data(using: .utf8) {
+                do {
+                    if let json = try JSONSerialization.jsonObject(with: data, options: []) as? [String: Any] {
+                        for (_, value) in json {
+                            guard let each = value as? [String:Any] else {
+                                print("Error")
+                                return
+                            }
+                            self.fetchedUser = User(
+                                    id: Int(each["id"] as! String) ?? 0,
+                                    username: each["user"] as! String,
+                                    telephone: each["telephone"] as! String
+                                )
+                        }
+                    }
+                    
+                } catch {
+                    print("Error parsing JSON: \(error)")
+                }
+            }
+            self.responses["userByUserIDFetch"] = 1;
+        }
+    }
+    func cancelReservation(resID: Int, courtID: Int, userID: Int, reason: String, by: Int) -> Void {
+        // @param by -> either the court(3) or the user(2)
+        self.responses["cancelReservation"] = 0
+        let parameters: String = "type=CANCELRESERVATION&userID=\(userID)&courtID=\(courtID)&resID=\(resID)&reason=\(reason)&by=\(by)"
+        let url = URL(string: "https://atlasreserve.ma/index.php")!
+        let group = DispatchGroup()
+        group.enter()
+        var request = URLRequest(url: url)
+        request.httpMethod = "POST"
+        request.httpBody = parameters.data(using:.utf8)
+        var response = "404";
+        DispatchQueue.global(qos:.default).async {
+            self.getResponse(withRequest: request, withCompletion: {
+                    detail in response = detail ?? "404";
+                    group.leave()
+                }
+            )
+        }
+        group.notify(queue: DispatchQueue.main) {
+            if (response == "\"Success\"") {
+                self.responses["cancelReservation"] = 2
+            } else {
+                self.responses["cancelReservation"] = 1
+                print(response)
+            }
+        }
+    }
 }
 extension Data {
     // Source : https://stackoverflow.com/questions/26162616/upload-image-with-parameters-in-swift/26163136#26163136
