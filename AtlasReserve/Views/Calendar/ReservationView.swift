@@ -35,7 +35,6 @@ struct ReservationView: View {
                                     Text(account.courts[account.courts.firstIndex(where: { court in
                                         return court.id == i.courtID
                                     }) ?? 0].name)
-                                    Text(String(i.resType))
                                 }
                                 Text(i.startTime + "-" + i.endTime)
                                 

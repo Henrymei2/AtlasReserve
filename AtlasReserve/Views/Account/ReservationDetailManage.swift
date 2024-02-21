@@ -51,7 +51,7 @@ struct ReservationDetailManage: View {
                 }
                 HStack {
                     Text("Field Type")
-                    Text(String(self.field.type))
+                    Text(FieldType.convert[self.field.type]!)
                     Spacer()
                 }
             }.padding()
@@ -78,8 +78,8 @@ struct ReservationDetailManage: View {
                         Spacer()
                     }
                     Spacer()
-                    Text("If you want to cancel this reservation, you can enter a reason")
-                    TextField("Reason for cancelation", text: $reasonForCancel, prompt: Text("Optional, 255 characters limit")).onChange(of: reasonForCancel) { _ in
+                    Text("reason-for-cancel")
+                    TextField("Reason for cancelation", text: $reasonForCancel, prompt: Text("optional")).onChange(of: reasonForCancel) { _ in
                         self.reasonForCancel = String(self.reasonForCancel.prefix(255))
                     }
                     

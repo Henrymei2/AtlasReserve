@@ -12,10 +12,10 @@ import Kingfisher
 class Account:ObservableObject{
     @Published var email:String = "";
     @Published var password:String = "";
-    @Published var username:String = "qwerty"; // TODO: Test
-    @Published var id:Int = 10031; // TODO: Test
+    @Published var username:String = "";
+    @Published var id:Int = 0;
     @Published var loggedIn:Bool = false;
-    @Published var isOwner = true; // TODO: Test
+    @Published var isOwner = false; 
     @Published var response:String = "";
     @Published var responses:Dictionary = [
         // courtFetch 1: fetch completed
@@ -82,7 +82,7 @@ class Account:ObservableObject{
     ];
     @Published var viewingPage:Int = 1;
     @Published var courts: [Court] = [];
-    @Published var fields: [Field] = [Field(id: 1, type: 1, startTime: "00:01", endTime: "00:00", availability: 1, count: 1, courtID: 1)] // TODO: Test
+    @Published var fields: [Field] = []
     @Published var fieldsManage: [Field] = []; // This variable is only used for editing fields
     @Published var reservations: [Reservation] = []
     @Published var archives: [Archive] = []
@@ -136,7 +136,11 @@ class Account:ObservableObject{
                                 return 1;
                             }
                             self.id = Int(each["id"] as! String)!
+                            UserDefaults.standard.set(self.id, forKey: "id")
                             self.isOwner = each["isOwner"] as! String == "1"
+                            UserDefaults.standard.set(self.isOwner, forKey: "isOwner")
+                            self.username = each["user"] as! String
+                            UserDefaults.standard.set(self.username, forKey: "username")
                         }
                     }
                     

@@ -29,7 +29,7 @@ struct CourtView: View {
                     }
                 } else {
                     HStack{
-                        Text("Pull down to refresh")
+                        Text("Pull Down to refresh")
                         Spacer()
                     }.padding()
                     LazyVStack() {

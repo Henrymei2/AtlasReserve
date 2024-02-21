@@ -26,7 +26,7 @@ struct BottomNavigation: View {
                             .frame(maxWidth:.infinity)
                             .imageScale(.large)
                             .foregroundColor(page.id == account.viewingPage ? Color.blue : Color.black)
-                        Text(page.desc).font(.caption2).foregroundColor(page.id == account.viewingPage ? Color.blue : Color.black)
+                        Text(LocalizedStringKey(page.desc)).font(.caption2).foregroundColor(page.id == account.viewingPage ? Color.blue : Color.black)
                     }
                     .padding(.top)
                     .padding(.bottom)

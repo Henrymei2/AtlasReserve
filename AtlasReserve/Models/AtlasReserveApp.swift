@@ -26,6 +26,9 @@ struct AtlasReserveApp: App {
                     }
                     if UserDefaults.standard.bool(forKey: "loggedIn") {
                         account.loggedIn = true
+                        account.id = UserDefaults.standard.integer(forKey: "id")
+                        account.isOwner = UserDefaults.standard.bool(forKey: "isOwner")
+                        account.username = UserDefaults.standard.string(forKey: "username") ?? "user"
                     }
                 }
         }

@@ -12,6 +12,7 @@ struct CourtManageCard: View {
     @EnvironmentObject var account: Account
     private var court: Court;
     @State var confirmed: Bool = false
+    @State var showAlert: Bool = false
     init(court: Court) {
         self.court = court
     }
@@ -48,17 +49,25 @@ struct CourtManageCard: View {
                 Spacer()
                 if !self.confirmed {
                     Button {
-                        self.confirmed = true
+                        self.showAlert = true
                     } label: {
                         Text("Delete").foregroundStyle(.red)
                     }.buttonStyle(.bordered)
+                    .alert("confirm-delete-court", isPresented: $showAlert) {
+                        Button("ok", role: .destructive) {
+                            self.confirmed = true
+                        }
+                        Button("Cancel", role: .cancel) {
+                            self.confirmed = false
+                        }
+                    }
                 } else {
                     NavigationLink {
                         RequestResult(loadingText: "Deleting a Court", responseKey: "deleteCourt", successCode: 3) {code in
                             Text("An unhandled error occured")
                             }.environmentObject(account)
                             .onAppear {
-                                account.deleteCourt(courtID: self.court.id)
+                                //account.deleteCourt(courtID: self.court.id)
                             }
                     } label: {
                         ZStack{

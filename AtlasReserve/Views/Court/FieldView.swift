@@ -36,11 +36,11 @@ struct FieldView: View {
                 } else {
                     VStack{
                         HStack{
-                            Text(String(field.type))
+                            Text(FieldType.convert[field.type]!)
                             Spacer()
                         }
                         HStack{
-                            Text(currentDay + " ")
+                            Text(LocalizedStringKey(currentDay))
                             Text(timeFormatter.string(from: field.startTime)).font(.callout).foregroundStyle(.gray)
                             Text("-")
                             Text(timeFormatter.string(from: field.endTime)).font(.callout).foregroundStyle(.gray)
@@ -98,5 +98,5 @@ struct FieldView: View {
 }
 
 #Preview {
-    FieldView(field: Field(id: 3, type: 1, startTime: "12:12:12", endTime: "12:34:12", availability: 5, count: 1, courtID: 1)).environmentObject(Account())
+    FieldView(field: Field(id: 3, type: 5, startTime: "12:12:12", endTime: "12:34:12", availability: 5, count: 1, courtID: 1)).environmentObject(Account())
 }

@@ -61,9 +61,9 @@ struct ReservationManageView: View {
                                 Text(reservation.endTime)
                             }.frame(maxWidth: .infinity)
                             VStack{
-                                Text(String(account.fieldsManage.first(where: { f in
+                                Text(FieldType.convert[account.fieldsManage.first(where: { f in
                                     f.id == reservation.field
-                                })!.type))
+                                })!.type]!)
                             }.frame(maxWidth: .infinity)
                             
                             

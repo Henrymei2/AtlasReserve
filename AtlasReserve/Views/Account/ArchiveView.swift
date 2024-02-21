@@ -13,7 +13,7 @@ struct ArchiveView: View {
     private var archive: Archive
     private var asOwner: Bool
     @State var court: Court = Court(id: 0, name: "", owner: "", address: "", telephone: "0", previewImageURL: URL(string: "https://atlasreserve.ma")!)
-    @State var field: Field = Field(id: 0, type: 0, startTime: "", endTime: "", availability: 0, count: 0, courtID: 0)
+    @State var field: Field = Field(id: 0, type: 1, startTime: "", endTime: "", availability: 0, count: 0, courtID: 0)
     @State var user: User = User(id: 1, username: "", telephone: "")
     init(archive: Archive, asOwner: Bool) {
         self.archive = archive
@@ -74,6 +74,11 @@ struct ArchiveView: View {
                 }
                 VStack {
                     HStack{
+                        Text("Type: ")
+                        Text(FieldType.convert[field.type]!)
+                        Spacer()
+                    }
+                    HStack{
                         Text("Start Time: ")
                         Text(timeFormatter.string(from:field.startTime))
                         Spacer()
@@ -92,7 +97,7 @@ struct ArchiveView: View {
                 }
                 VStack {
                     HStack{
-                        Text("Date")
+                        Text("Date: ")
                         Text(DateFormatter.yearMonthDay.string(from:archive.date))
                         Spacer()
                     }
@@ -124,7 +129,7 @@ struct ArchiveView: View {
                     }
                     VStack {
                         HStack{
-                            Text("ID: ")
+                            Text("User ID: ")
                             Text(String(user.id))
                             Spacer()
                         }

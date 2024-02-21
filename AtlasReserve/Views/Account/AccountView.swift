@@ -29,6 +29,11 @@ struct AccountView: View {
                 Spacer()
                 Image(systemName: "chevron.right").foregroundStyle(.black)
             }.padding()
+            NavigationLink (destination: ChangeLanguage()) {
+                Text("Change Language").font(.title2).foregroundStyle(.black)
+                Spacer()
+                Image(systemName: "chevron.right").foregroundStyle(.black)
+            }.padding()
             
                 
             Button("Log Out") {
@@ -40,6 +45,9 @@ struct AccountView: View {
                 Button("Log Out") {
                     account.loggedIn = false
                     UserDefaults.standard.set(false, forKey: "loggedIn")
+                    UserDefaults.standard.set(0, forKey: "id")
+                    UserDefaults.standard.set(false, forKey: "isOwner")
+                    UserDefaults.standard.set("", forKey: "username")
                 }
                 Button("Cancel") {
                     showAlert = false

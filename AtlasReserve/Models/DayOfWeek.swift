@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import SwiftUI
 
 struct DayOfWeek {
     static func convert(from dayNumber: Int) -> String {

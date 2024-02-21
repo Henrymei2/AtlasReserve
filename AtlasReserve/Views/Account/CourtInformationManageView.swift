@@ -63,7 +63,7 @@ struct CourtInformationManageView: View {
             }.textFieldStyle(.roundedBorder)
             if self.isModifying {
                 NavigationLink {
-                    RequestResult(loadingText: "Modifying a Court\nIf the image is changed, uploading an image could take time", responseKey: "modifyCourt", successCode: 3) {code in
+                    RequestResult(loadingText: "modify-court", responseKey: "modifyCourt", successCode: 3) {code in
                         Text(code == 1 ? "Unreasonable data detected" : "An unhandled error occured")
                     }.environmentObject(account)
                         .onAppear {
@@ -77,7 +77,7 @@ struct CourtInformationManageView: View {
                 }.padding()
             } else {
                 NavigationLink {
-                    RequestResult(loadingText: "Creating a Court\nUploading an image could take time", responseKey: "addCourt", successCode: 3) {code in
+                    RequestResult(loadingText: "create-court", responseKey: "addCourt", successCode: 3) {code in
                         Text(code == 1 ? "Unreasonable data detected" : "An unhandled error occured")
                     }.environmentObject(account)
                         .onAppear {

@@ -65,7 +65,7 @@ struct HomeView: View {
                             .bold()
                         Spacer()
                     }
-                    if account.reservations.isEmpty {
+                    if account.responses["reservationsByUserIDFetch"] == 0 {
                         ProgressView("Fetching Reservations")
                     } else if !account.reservations.contains(where: { reservation in
                             reservation.date == DateFormatter.yearMonthDay.date(from: DateFormatter.yearMonthDay.string(from: Date()))

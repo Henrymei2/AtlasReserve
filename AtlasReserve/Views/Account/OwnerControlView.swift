@@ -38,7 +38,7 @@ struct OwnerControlView: View {
                     }
                 }.padding()
             } else {
-                Text("This account is not registered as an owner account, Please send an email to info@atlasreserve.ma to request your account for verification to be an owner account")
+                Text("not-owner")
             }
         }.padding()
         .refreshable {

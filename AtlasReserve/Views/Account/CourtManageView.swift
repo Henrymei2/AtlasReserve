@@ -59,7 +59,7 @@ struct CourtManageView: View {
                 HStack {
                     NavigationLink {
                         RequestResult(loadingText: "Modifying Field(s)", responseKey: "modifyField", successCode: 3, holdCodes: Array(4...4 + account.fieldsManage.count)) {code in
-                            Text(code == 1 ? "Unreasonable data detected: make sure that the start time is earlier than the end time" : "An unhandled error occured")
+                            Text(code == 1 ? "local-error-unreasonable" : "An unhandled error occured")
                             }.environmentObject(account)
                             .onAppear {
                                 account.modifyFields(fields: account.fieldsManage)

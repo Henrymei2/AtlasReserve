@@ -48,9 +48,9 @@ struct ReservationManage: View {
                 }
                 HStack {
                     Text("Field Type")
-                    Text(String(account.fields.first(where: { field in
+                    Text(FieldType.convert[account.fields.first(where: { field in
                         field.id == self.fieldID
-                    })!.type))
+                    })!.type]!)
                     Spacer()
                 }
             }.padding()
@@ -68,8 +68,8 @@ struct ReservationManage: View {
                         Text("Mark this reservation as completed").foregroundStyle(.white)
                     }
                 }.padding()
-                Text("If you want to cancel this reservation, you can enter a reason")
-                TextField("Reason for cancelation", text: $reasonForCancel, prompt: Text("Optional, 255 characters limit")).onChange(of: reasonForCancel) { _ in
+                Text("reason-for-cancel")
+                TextField("Reason for cancelation", text: $reasonForCancel, prompt: Text("optional")).onChange(of: reasonForCancel) { _ in
                     self.reasonForCancel = String(self.reasonForCancel.prefix(255))
                 }
                 

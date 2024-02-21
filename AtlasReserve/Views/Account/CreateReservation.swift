@@ -56,7 +56,7 @@ struct CreateReservation: View {
                 }.padding()
                 
             } else {
-                Text("No Fields Avaible. Scroll to the bottom at Court Management page to create a Field")
+                Text("no-fields")
             }
         }.padding()
     }

@@ -54,7 +54,7 @@ struct FieldManageView: View {
                     Text("Type")
                     Picker("Type", selection: (self.field >= 0) ? $account.fieldsManage[self.field].type : $pendingFieldType) {
                         ForEach(FieldType.types, id: \.self) { type in
-                            Text(String(type))
+                            Text(FieldType.convert[type]!)
                         }
                     }.disabled(self.readOnly)
                 }
@@ -133,7 +133,7 @@ struct FieldManageView: View {
                             showAlert = true
                         } label: {
                             Text("Delete").foregroundStyle(.red)
-                        }.alert("Confirm Delete. Note: Deleting the field will result in all past and present reservations associated with the field to be deleted!", isPresented: $showAlert) {
+                        }.alert("confirm-delete-field", isPresented: $showAlert) {
                             HStack{
                                 Button (role: .cancel) {
                                     showAlert = false
@@ -161,7 +161,7 @@ struct FieldManageView: View {
             if self.field < 0 {
                 NavigationLink {
                     RequestResult(loadingText: "Creating a Field", responseKey: "addField", successCode: 3) {code in
-                        Text(code == 1 ? "Unreasonable data detected: make sure that the start time is earlier than the end time" : "An unhandled error occured")
+                        Text(code == 1 ? "local-error-unreasonable" : "An unhandled error occured")
                         }.environmentObject(account)
                         .onAppear {
                             account.addField(courtID: self.courtID, type: self.pendingFieldType, startTime: self.pendingFieldStartTime, endTime: self.pendingFieldEndTime, count: self.pendingFieldCount, availability: self.pendingFieldAvailabilityArray)
