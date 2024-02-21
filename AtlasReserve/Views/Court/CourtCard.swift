@@ -32,7 +32,7 @@ struct CourtCard: View {
                     .onSuccess({ result in
                         self.court.previewImage = result.image
                     })
-                    .aspectRatio(contentMode: .fit)
+                    .aspectRatio(contentMode: .fill)
                     .frame(width: 350, height: 180)
                     .clipShape(RoundedRectangle(cornerRadius: 15))
                     .shadow(color:.gray.opacity(0.5), radius: 5.0, x: 0, y: 2)
@@ -47,7 +47,6 @@ struct CourtCard: View {
                 .padding(.bottom)
                 .frame(width:350, height:50)
                 .clipShape(RoundedRectangle(cornerRadius: 15))
-                .background(Color.white)
                 
                 
             }

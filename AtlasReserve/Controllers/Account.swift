@@ -7,11 +7,12 @@
 
 import Foundation
 import UIKit
+import Kingfisher
 
 class Account:ObservableObject{
     @Published var email:String = "";
     @Published var password:String = "";
-    @Published var username:String = "";
+    @Published var username:String = "qwerty"; // TODO: Test
     @Published var id:Int = 10031; // TODO: Test
     @Published var loggedIn:Bool = false;
     @Published var isOwner = true; // TODO: Test
@@ -74,7 +75,9 @@ class Account:ObservableObject{
          * 1: Cannot cancel because of handled issues
          * 2: Successfully canceled the reservation
          */
-        "cancelReservation": 0
+        "cancelReservation": 0,
+        // archivedReservationsFetch 1: fetch completed
+        "archivedReservationsFetch": 0
         
     ];
     @Published var viewingPage:Int = 1;
@@ -82,6 +85,7 @@ class Account:ObservableObject{
     @Published var fields: [Field] = [Field(id: 1, type: 1, startTime: "00:01", endTime: "00:00", availability: 1, count: 1, courtID: 1)] // TODO: Test
     @Published var fieldsManage: [Field] = []; // This variable is only used for editing fields
     @Published var reservations: [Reservation] = []
+    @Published var archives: [Archive] = []
     @Published var fetchedUser: User = User(id: 0, username: "", telephone: "");
     @Published var resDates: [Date] = []
     @Published var currentDay: Date = DateFormatter.yearMonthDay.date(from: DateFormatter.yearMonthDay.string(from:Date())) ?? Date();
@@ -205,7 +209,7 @@ class Account:ObservableObject{
         }
         task.resume()
     }
-    func getCourts() -> Void {
+    func getCourts(clearImageCache: Bool = true) -> Void {
         let url = URL(string: "https://atlasreserve.ma/index.php")!
         var request = URLRequest(url: url)
         let parameters: String = "type=GETCOURTS"
@@ -214,8 +218,8 @@ class Account:ObservableObject{
         let group = DispatchGroup()
         group.enter()
         var response = "Error"
-        self.courts = []
         self.responses["courtFetch"] = 0
+        self.courts = []
         DispatchQueue.global(qos:.default).async {
             self.getResponse(withRequest: request, withCompletion: {detail in response = detail ?? "404"; group.leave()})
         }
@@ -232,13 +236,17 @@ class Account:ObservableObject{
                                 print ("Error")
                                 return
                             }
+                            if clearImageCache {
+                                // Clear cache of previewImage
+                                ImageCache.default.removeImage(forKey: previewImageUrl.absoluteString)
+                            }
                             self.courts.append(
                                 Court(
                                     id: Int(each["id"] as! String) ?? 0,
                                     name: each["name"] as! String,
                                     owner: each["owner"] as! String,
                                     address: each["address"] as! String,
-                                    courtNumber: Int(each["courtNumber"] as! String) ?? 0,
+                                    telephone: each["telephone"] as! String,
                                     previewImageURL: previewImageUrl,
                                     ownerID: Int(each["ownerID"] as! String) ?? 0 // Useful for court management
                                 )
@@ -411,6 +419,7 @@ class Account:ObservableObject{
         group.enter()
         var response = "Error"
         self.reservations = []
+        self.resDates = []
         self.responses["reservationsByUserIDFetch"] = 0
         DispatchQueue.global(qos:.default).async {
             self.getResponse(withRequest: request, withCompletion: {detail in response = detail ?? "404"; group.leave()})
@@ -435,7 +444,7 @@ class Account:ObservableObject{
                                     endTime: each["endTime"] as! String
                                 )
                             )
-                            
+                            self.resDates.append(DateFormatter.yearMonthDay.date(from: each["date"] as! String) ?? Date())
                             self.reservations.sort{(lhs, rhs) -> Bool in
                                 return lhs.startTime < rhs.startTime
                             }
@@ -627,7 +636,7 @@ class Account:ObservableObject{
             }
         }
     }
-    func addCourt(name: String, owner: String, address: String, number: Int, image: UIImage) -> Void {
+    func addCourt(name: String, owner: String, address: String, number: String, image: UIImage) -> Void {
         self.responses["addCourt"] = 0
         let imageData = image.compress(to: 800)
         
@@ -702,7 +711,7 @@ class Account:ObservableObject{
             "name": court.name,
             "owner": court.owner,
             "address": court.address,
-            "number": court.courtNumber,
+            "number": court.telephone,
             "id": court.id,
             "changedImage": changedImage
         ]
@@ -830,6 +839,56 @@ class Account:ObservableObject{
                 self.responses["cancelReservation"] = 1
                 print(response)
             }
+        }
+    }
+    func getArchivedReservations(isCourtOwner: Bool, id: Int) -> Void {
+        let url = URL(string: "https://atlasreserve.ma/index.php")!
+        var request = URLRequest(url: url)
+        let by = isCourtOwner ? 1 : 0
+        let parameters: String = "type=GETARCHIVEDRESERVATIONS&isCourtOwner=\(by)&id=\(id)"
+        request.httpMethod = "POST"
+        request.httpBody = parameters.data(using:.utf8)
+        let group = DispatchGroup()
+        group.enter()
+        var response = "Error"
+        self.archives = []
+        self.responses["archivedReservationsFetch"] = 0
+        DispatchQueue.global(qos:.default).async {
+            self.getResponse(withRequest: request, withCompletion: {detail in response = detail ?? "404"; group.leave()})
+        }
+        group.notify(queue: DispatchQueue.main) {
+            if let data = response.data(using: .utf8) {
+                do {
+                    if let json = try JSONSerialization.jsonObject(with: data, options: []) as? [String: Any] {
+                        for (_, value) in json {
+                            guard let each = value as? [String:Any] else {
+                                print("Error")
+                                return
+                            }
+                            self.archives.append(
+                                Archive(
+                                    resID: Int(each["resID"] as! String) ?? 0,
+                                    userID: Int(each["userID"] as! String) ?? 0,
+                                    courtID: Int(each["courtID"] as! String) ?? 0,
+                                    fieldID: Int(each["fieldID"] as! String) ?? 0,
+                                    date: each["date"] as! String,
+                                    state: Int(each["state"] as! String) ?? 0,
+                                    reason: each["reason"] as! String
+                                )
+                            )
+                            
+                            self.archives.sort{(lhs, rhs) -> Bool in
+                                return lhs.date > rhs.date
+                            }
+                            
+                        }
+                    }
+                    
+                } catch {
+                    print("Error parsing JSON: \(error)")
+                }
+            }
+            self.responses["archivedReservationsFetch"] = 1;
         }
     }
 }

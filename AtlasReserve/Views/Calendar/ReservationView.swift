@@ -16,13 +16,13 @@ struct ReservationView: View {
     var body: some View {
         if account.responses["courtFetch"] == 0 {
             ProgressView("Loading Courts").onAppear {
-                account.getCourts()
+                account.getCourts(clearImageCache: false)
             }
         } else if account.responses["reservationsByUserIDFetch"] == 0 {
             ProgressView("Loading Reservations").onAppear {
                 account.getReservationsByUserID(userID: account.id)
             }
-        } else {
+        }else{
             LazyVStack() {
                 ForEach(account.reservations, id: \.id) { i in
                     if (i.date == account.currentDay) {

@@ -14,7 +14,7 @@ struct CourtInformationManageView: View {
     @State var pendingCourtName: String = ""
     @State var pendingCourtOwner: String = ""
     @State var pendingCourtAddress: String = ""
-    @State var pendingCourtNumber: Int = 0
+    @State var pendingTelephone: String = ""
     @State var courtPreviewItem: PhotosPickerItem?
     @State var courtPreviewImage: Image?
     @State var courtPreviewUIImage: UIImage = UIImage(systemName: "folder")!
@@ -26,10 +26,10 @@ struct CourtInformationManageView: View {
     }
     var body: some View {
         ScrollView {
-            PhotosPicker("Pick A photo", selection: $courtPreviewItem, matching: .images)
+            PhotosPicker("Pick A photo\n", selection: $courtPreviewItem, matching: .images)
             courtPreviewImage?
                 .resizable()
-                .aspectRatio(contentMode: .fit)
+                .aspectRatio(contentMode: .fill)
                 .frame(width: 300, height: 180)
                 .clipShape(RoundedRectangle(cornerRadius: 15))
                 .shadow(color:.gray.opacity(0.5), radius: 5.0, x: 0, y: 2)
@@ -55,10 +55,12 @@ struct CourtInformationManageView: View {
                 Text("Address")
             }.textFieldStyle(.roundedBorder)
             HStack {
-                Text("Court  Number").font(.title2)
+                Text("Telephone").font(.title2)
                 Spacer()
             }
-            TextField("Court Number", value: self.isModifying ? $account.courts[self.courtIndex].courtNumber : $pendingCourtNumber, formatter: NumberFormatter.init()).textFieldStyle(.roundedBorder)
+            TextField(text: self.isModifying ? $account.courts[self.courtIndex].telephone : $pendingTelephone){
+                Text("Telephone")
+            }.textFieldStyle(.roundedBorder)
             if self.isModifying {
                 NavigationLink {
                     RequestResult(loadingText: "Modifying a Court\nIf the image is changed, uploading an image could take time", responseKey: "modifyCourt", successCode: 3) {code in
@@ -79,7 +81,7 @@ struct CourtInformationManageView: View {
                         Text(code == 1 ? "Unreasonable data detected" : "An unhandled error occured")
                     }.environmentObject(account)
                         .onAppear {
-                            account.addCourt(name: self.pendingCourtName, owner: self.pendingCourtOwner, address: self.pendingCourtAddress, number: self.pendingCourtNumber, image: self.courtPreviewUIImage)
+                            account.addCourt(name: self.pendingCourtName, owner: self.pendingCourtOwner, address: self.pendingCourtAddress, number: self.pendingTelephone, image: self.courtPreviewUIImage)
                         }
                 } label: {
                     ZStack{

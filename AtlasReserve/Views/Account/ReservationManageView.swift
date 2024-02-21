@@ -85,6 +85,6 @@ struct ReservationManageView: View {
 
 #Preview {
     NavigationStack{
-        ReservationManageView(court: Court(id: 10, name: "", owner: "", address: "", courtNumber: 1, previewImageURL: URL(fileURLWithPath: ""))).environmentObject(Account())
+        ReservationManageView(court: Court(id: 10, name: "", owner: "", address: "", telephone: "1", previewImageURL: URL(fileURLWithPath: ""))).environmentObject(Account())
     }
 }

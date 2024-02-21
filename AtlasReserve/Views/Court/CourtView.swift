@@ -9,8 +9,8 @@ import SwiftUI
 
 struct CourtView: View {
     @EnvironmentObject var account:Account;
+    @State var refreshed = false;
     var body: some View {
-        
         NavigationStack {
             ScrollView{
                 HStack{
@@ -19,9 +19,13 @@ struct CourtView: View {
                         .fontDesign(.serif)
                     Spacer()
                 }.padding()
-                if !(account.responses["courtFetch"] == 1) {
+                if account.responses["courtFetch"] == 0 {
                     ProgressView("Loading").onAppear {
-                        account.getCourts()
+                        if !refreshed {
+                            account.getCourts(clearImageCache: false)
+                        } else {
+                            account.getCourts()
+                        }
                     }
                 } else {
                     HStack{
@@ -38,6 +42,7 @@ struct CourtView: View {
                 }
             }.refreshable {
                 account.responses["courtFetch"] = 0
+                refreshed = true;
             }
             
         }

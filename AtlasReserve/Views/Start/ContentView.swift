@@ -14,11 +14,13 @@ struct ContentView: View {
     var body: some View {
         VStack {
             if account.viewingPage == 1{
-                HomeView()
+                HomeView().environmentObject(account)
             } else if account.viewingPage == 2 {
                 CourtView().environmentObject(account)
             } else if account.viewingPage == 3 {
-                CalendarPage().environmentObject(account)
+                CalendarPage().environmentObject(account).onAppear {
+                    account.responses["reservationsByUserIDFetch"] = 0
+                }
             } else if account.viewingPage == 4 {
                 AccountView().environmentObject(account)
             }
@@ -27,6 +29,7 @@ struct ContentView: View {
             
         }
         .padding()
+
         
     }
 }
