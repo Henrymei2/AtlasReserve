@@ -73,7 +73,7 @@ struct HomeView: View {
                            Text("No reservations for today")
                     }
                     
-                    ReservationView().onAppear {
+                    ReservationView(onlyToday: true).onAppear {
                         account.responses["reservationsByUserIDFetch"] = 0
                     }
                 }.padding()
@@ -91,6 +91,20 @@ struct HomeView: View {
                         } else {
                             CourtCard(court: account.courts[0])
                         }
+                        HStack{
+                            Spacer()
+                            Button{
+                                account.viewingPage = 2
+                            } label: {
+                                Text("Check Out More Courts")
+                                Image(systemName: "chevron.right")
+                            }
+                            .foregroundStyle(.black)
+                            
+                        }.padding()
+                        
+                        
+            
                     }
                 }
             }

@@ -16,7 +16,7 @@
 "password"="Mot de passe";
 "submit"="Soumettre";
 "confirm-password"="Confirmer le mot de passe";
-"username-must"="Le nom d'utilisateur doit avoir au moins 6 caractères";
+"username-must"="Le nom d'utilisateur doit avoir au moins 2 caractères";
 "password-must"="Le mot de passe doit avoir au moins 6 caractères";
 "email-must"="L'e-mail doit être au format correct";
 "register-success"="Compte créé avec succès";

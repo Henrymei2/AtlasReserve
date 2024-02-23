@@ -29,7 +29,10 @@ struct CourtView: View {
                     }
                 } else {
                     HStack{
-                        Text("Pull Down to refresh")
+                        Button("Refresh") {
+                            account.responses["courtFetch"] = 0
+                            refreshed = true;
+                        }.buttonStyle(.bordered)
                         Spacer()
                     }.padding()
                     LazyVStack() {
@@ -40,9 +43,6 @@ struct CourtView: View {
                         }
                     }
                 }
-            }.refreshable {
-                account.responses["courtFetch"] = 0
-                refreshed = true;
             }
             
         }

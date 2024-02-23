@@ -11,6 +11,7 @@ struct CalendarPage: View {
     @EnvironmentObject var account: Account
     var body: some View {
         VStack{
+            /*
             HStack {
                 Text("Calendar")
                     .font(.largeTitle).bold()
@@ -18,15 +19,16 @@ struct CalendarPage: View {
                 Spacer()
             }.padding(.horizontal)
             RootView(reservationDates: account.resDates).environmentObject(account)
-            
+            */
         ScrollView {
             
-            Text("Reservations on ").font(.largeTitle)
-            Text(DateFormatter.yearMonthDay.string(from: account.currentDay)).font(.title)
-            Text("Pull Down to refresh")
-            ReservationView().environmentObject(account)
-        }.refreshable {
-            account.responses["reservationsByUserIDFetch"] = 0
+            Text("Reservations").font(.largeTitle).fontDesign(.serif).bold()
+            ReservationView()
+                .environmentObject(account)
+                .onAppear {
+                    account.responses["reservationsByUserIDFetch"] = 0
+                    account.responses["courtFetch"] = 0
+                }
         }
             
         }.padding(.horizontal)

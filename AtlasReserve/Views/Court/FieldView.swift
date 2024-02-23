@@ -61,8 +61,9 @@ struct FieldView: View {
                         ).environmentObject(account).onAppear {
                             account.reserveCourt(fieldID: field.id, date: nextDate)
                         }) {
-                            Text("Reserve")
+                            Button("Reserve"){}.disabled(true)
                                 .foregroundStyle(.blue)
+                                .buttonStyle(.borderedProminent)
                         }
                     } else {
                         Text("Full")

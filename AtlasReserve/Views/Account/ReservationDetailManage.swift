@@ -87,12 +87,14 @@ struct ReservationDetailManage: View {
                 }.padding()
             }
             if !self.confirmed {
-                ZStack{
-                    RoundedRectangle(cornerRadius: 10.0).foregroundStyle(.red).frame(width:180, height:35)
-                    Button("Delete Reservation") {
-                        confirmed = true
-                    }.foregroundStyle(.white)
-                }.padding()
+                Button("Delete Reservation") {
+                    confirmed = true
+                }
+                .padding()
+                .background(
+                    RoundedRectangle(cornerRadius: 10.0).foregroundStyle(.red)
+                )
+                .foregroundStyle(.white)
             } else {
                 NavigationLink {
                     RequestResult(loadingText: "Canceling Reservation", responseKey: "cancelReservation", successCode: 2) {code in
@@ -102,10 +104,12 @@ struct ReservationDetailManage: View {
                             account.cancelReservation(resID: reservation.id, courtID: field.courtID, userID: account.id, reason: reasonForCancel, by: 3, resType: reservation.resType, date: reservation.date, fieldID: self.field.id)
                         }
                 } label: {
-                    ZStack{
-                        RoundedRectangle(cornerRadius: 10.0).foregroundStyle(.red).frame(width:180, height:35)
-                        Text("Click Again to Confirm").foregroundStyle(.white)
-                    }
+                    Text("Click Again to Confirm")
+                        .padding()
+                        .background(
+                            RoundedRectangle(cornerRadius: 10.0).foregroundStyle(.red)
+                        )
+                        .foregroundStyle(.white)
                 }.padding()
                 
             }

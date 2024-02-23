@@ -41,9 +41,6 @@ struct OwnerControlView: View {
                 Text("not-owner")
             }
         }.padding()
-        .refreshable {
-            account.responses["courtFetch"] = 0
-        }
     }
 }
 

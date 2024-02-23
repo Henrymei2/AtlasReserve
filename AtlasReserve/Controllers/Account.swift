@@ -13,11 +13,24 @@ class Account:ObservableObject{
     @Published var email:String = "";
     @Published var password:String = "";
     @Published var username:String = "";
-    @Published var id:Int = 0;
+    @Published var id:Int = 10031; // TODO: Test
     @Published var loggedIn:Bool = false;
-    @Published var isOwner = false; 
+    @Published var isOwner = true; // TODO: Test
     @Published var response:String = "";
     @Published var responses:Dictionary = [
+        /* addAccount
+         * 1: Cannot register because username or email is already registered
+         * 2: Cannot register because of other unhandled issues
+         * 3: Successfully registered the account
+         */
+        "addAccount": 0,
+        /* Login
+         * 1: Cannot login because cannot find account
+         * 2: Cannot login because password is incorrect
+         * 3: Cannot login because of other unhandled issues
+         * 4: Successfully logged in
+         */
+        "login": 0,
         // courtFetch 1: fetch completed
         "courtFetch": 0,
         // fieldFetch 1: fetch completed
@@ -81,13 +94,13 @@ class Account:ObservableObject{
         
     ];
     @Published var viewingPage:Int = 1;
+    @Published var changedDate: Date = Date(); // This variable is for storing modified date in all date modification views
     @Published var courts: [Court] = [];
     @Published var fields: [Field] = []
     @Published var fieldsManage: [Field] = []; // This variable is only used for editing fields
     @Published var reservations: [Reservation] = []
     @Published var archives: [Archive] = []
     @Published var fetchedUser: User = User(id: 0, username: "", telephone: "");
-    @Published var resDates: [Date] = []
     @Published var currentDay: Date = DateFormatter.yearMonthDay.date(from: DateFormatter.yearMonthDay.string(from:Date())) ?? Date();
     @Published var PAGES: [Pages] = [
         Pages(id:1,name:"house",desc:"Home"),
@@ -98,81 +111,81 @@ class Account:ObservableObject{
     func checkLoginStatus(login:Bool) {
         print(UserDefaults.standard.bool(forKey: "loggedIn"))
     }
-    func checkTwoPasswordEqual(pass1:String, pass2:String)->Bool{
-        return pass1 == pass2 ? false : true
-    }
     func printLanguage(){
         print(Locale.preferredLanguages[0].uppercased())
     }
-    func logIn(username:String,password:String)->Int{
+    func logIn(username:String,password:String) -> Void{
         let usingEmail = NSPredicate(format:"SELF MATCHES %@", "[A-Z0-9a-z._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,64}").evaluate(with: username)
         
         let parameters: String = "type=LOGIN&email=\(usingEmail)&username=\(username)&password=\(password)"
         let url = URL(string: "https://atlasreserve.ma/index.php")!
-        var result = 0;
         var request = URLRequest(url: url)
         request.httpMethod = "POST"
         request.httpBody = parameters.data(using:.utf8)
         let group = DispatchGroup()
         group.enter()
         var response = "Error"
+        self.responses["login"] = 0
         DispatchQueue.global(qos:.default).async {
             self.getResponse(withRequest: request, withCompletion: {detail in response = detail ?? "404";            group.leave()})
 
         }
-        group.wait()
-        if response == "\"Not Found\"" {
-            result = 1 //"Username or Email not found"
-        } else if response == "\"Wrong\"" {
-            result = 2 //"Username (email) or password is incorrect"
-        } else {
-            // Success
-            if let data = response.data(using: .utf8) {
-                do {
-                    if let json = try JSONSerialization.jsonObject(with: data, options: []) as? [String: Any] {
-                        for (_, value) in json {
-                            guard let each = value as? [String:Any] else {
-                                print("Error")
-                                return 1;
+        group.notify(queue: DispatchQueue.main) {
+            if response == "\"Not Found\"" {
+                self.responses["login"] = 1 //"Username or Email not found"
+            } else if response == "\"Wrong\"" {
+                self.responses["login"] = 2 //"Username (email) or password is incorrect"
+            } else {
+                // Success
+                if let data = response.data(using: .utf8) {
+                    do {
+                        if let json = try JSONSerialization.jsonObject(with: data, options: []) as? [String: Any] {
+                            for (_, value) in json {
+                                guard let each = value as? [String:Any] else {
+                                    print("Error")
+                                    self.responses["login"] = 3
+                                    return
+                                }
+                                self.id = Int(each["id"] as! String)!
+                                UserDefaults.standard.set(self.id, forKey: "id")
+                                self.isOwner = each["isOwner"] as! String == "1"
+                                UserDefaults.standard.set(self.isOwner, forKey: "isOwner")
+                                self.username = each["user"] as! String
+                                UserDefaults.standard.set(self.username, forKey: "username")
                             }
-                            self.id = Int(each["id"] as! String)!
-                            UserDefaults.standard.set(self.id, forKey: "id")
-                            self.isOwner = each["isOwner"] as! String == "1"
-                            UserDefaults.standard.set(self.isOwner, forKey: "isOwner")
-                            self.username = each["user"] as! String
-                            UserDefaults.standard.set(self.username, forKey: "username")
                         }
+                        
+                    } catch {
+                        print("Error parsing JSON: \(error)")
                     }
-                    
-                } catch {
-                    print("Error parsing JSON: \(error)")
                 }
+                self.responses["login"] = 4
+                self.loggedIn = true
+                UserDefaults.standard.set(true, forKey: "loggedIn")
             }
-            result = 3 //"Successfully logged in"
         }
-        return result
     }
-    func addAccount(username:String,password:String,email:String)->Bool {
+    func addAccount(username:String,password:String,email:String) -> Void {
         let parameters: String = "type=ADDACCOUNT&email=\(email)&username=\(username)&password=\(password)"
         let url = URL(string: "https://atlasreserve.ma/index.php")!
         let group = DispatchGroup()
         group.enter()
-        var result = false
         var request = URLRequest(url: url)
         request.httpMethod = "POST"
         request.httpBody = parameters.data(using:.utf8)
-        var response = "404";
+        var response = "None";
+        self.responses["addAccount"] = 0
         DispatchQueue.global(qos:.default).async {
             self.getResponse(withRequest: request, withCompletion: {
-                    detail in response = detail ?? "404";
+                    detail in response = detail ?? "None";
+                print(response);
                     group.leave()
                 }
             )
 
         }
         group.wait()
-        result = response == "\"200\""
-        return result
+        self.responses["addAccount"] = Int(response) ?? 2
     }
     func getResponse(withRequest request:URLRequest, withCompletion completion: @escaping (String?) -> Void) {
         let task = URLSession.shared.dataTask(with: request) { (data, response, error) in
@@ -423,7 +436,6 @@ class Account:ObservableObject{
         group.enter()
         var response = "Error"
         self.reservations = []
-        self.resDates = []
         self.responses["reservationsByUserIDFetch"] = 0
         DispatchQueue.global(qos:.default).async {
             self.getResponse(withRequest: request, withCompletion: {detail in response = detail ?? "404"; group.leave()})
@@ -448,9 +460,11 @@ class Account:ObservableObject{
                                     endTime: each["endTime"] as! String
                                 )
                             )
-                            self.resDates.append(DateFormatter.yearMonthDay.date(from: each["date"] as! String) ?? Date())
                             self.reservations.sort{(lhs, rhs) -> Bool in
-                                return lhs.startTime < rhs.startTime
+                                if lhs.date == rhs.date {
+                                    return lhs.startTime < rhs.startTime
+                                }
+                                return lhs.date < rhs.date
                             }
                             
                         }

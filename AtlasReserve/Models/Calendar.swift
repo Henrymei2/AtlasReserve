@@ -241,8 +241,9 @@ struct RootView: View {
         }
     }
 }
+/*
 struct MyPreviewProvider_Previews: PreviewProvider {
     static var previews: some View {
         RootView(reservationDates: Account().resDates).environmentObject(Account())
     }
-}
+}*/

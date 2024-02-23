@@ -11,6 +11,7 @@ struct CourtManageView: View {
     @EnvironmentObject var account: Account
     private var court: Court
     @State private var isDatePickerVisible = false
+    @State private var hasAppeared = false
     private var timeFormatter: DateFormatter = DateFormatter()
     init(court: Court) {
         self.court = court
@@ -23,11 +24,20 @@ struct CourtManageView: View {
                 ProgressView()
                     .onAppear {
                         account.getFieldsByCourtID(court: court.id)
+                        hasAppeared = true
+                    }
+            } else if account.responses["courtFetch"] == 0 {
+                ProgressView()
+                    .onAppear {
+                        account.getCourts()
                     }
             } else {
                 NavigationLink (destination: CourtInformationManageView(courtIndex:    account.courts.firstIndex(where: { c in
                     return c.id == court.id
                 })!).environmentObject(account)) {
+                    Image(systemName: "pencil.circle.fill")
+                        .foregroundStyle(.black)
+                        .scaleEffect(1.2)
                     Text("Edit basic court information").font(.title2).foregroundStyle(.black)
                     Spacer()
                     Image(systemName: "chevron.right").foregroundStyle(.black)
@@ -36,6 +46,9 @@ struct CourtManageView: View {
                     .onAppear {
                         account.responses["reservationsByCourtIDFetch"] = 0
                     }) {
+                    Image(systemName: "newspaper.fill")
+                        .foregroundStyle(.gray)
+                        .scaleEffect(1.2)
                     Text("Manage Reservations").font(.title2).foregroundStyle(.black)
                     Spacer()
                     Image(systemName: "chevron.right").foregroundStyle(.black)
@@ -44,19 +57,19 @@ struct CourtManageView: View {
                     .onAppear {
                         account.responses["archivedReservationsFetch"] = 0
                     }) {
+                    Image(systemName: "book.fill")
+                        .foregroundStyle(.black)
+                        .scaleEffect(1.2)
                     Text("View Past Reservations").font(.title2).foregroundStyle(.black)
                     Spacer()
                     Image(systemName: "chevron.right").foregroundStyle(.black)
                 }.padding()
                 Text("Manage Fields").font(.title)
-                Button("Discard All Changes") {
-                    account.responses["fieldFetch"] = 0
-                }.buttonStyle(.bordered)
-                ForEach(account.fieldsManage.indices, id: \.self) {i in
-                    FieldManageView(field: i, courtID: self.court.id).padding().environmentObject(account)
-                    
-                }
                 HStack {
+                    Image(systemName: "xmark").foregroundStyle(.red)
+                    Button("Discard All Changes") {
+                        account.responses["fieldFetch"] = 0
+                    }.foregroundStyle(.red)
                     NavigationLink {
                         RequestResult(loadingText: "Modifying Field(s)", responseKey: "modifyField", successCode: 3, holdCodes: Array(4...4 + account.fieldsManage.count)) {code in
                             Text(code == 1 ? "local-error-unreasonable" : "An unhandled error occured")
@@ -65,20 +78,23 @@ struct CourtManageView: View {
                                 account.modifyFields(fields: account.fieldsManage)
                             }
                     } label: {
-                        Text("Confirm Modification")
+                        Image(systemName: "checkmark").foregroundStyle(.green)
+                        Text("Confirm Modification").foregroundStyle(.green)
                     }
-                    Spacer()
                     NavigationLink {
                         FieldManageView(field: -1, courtID: self.court.id).environmentObject(account) // -1 will be processed as "create"
                     } label: {
-                        Text("Add Field")
                         Image(systemName: "plus")
+                        Text("Add Field")
                     }
                 }.padding()
+                ForEach(account.fieldsManage.indices, id: \.self) {i in
+                    FieldManageView(field: i, courtID: self.court.id).padding().environmentObject(account)
+                    
+                }
+                    
             }
             
-        }.refreshable {
-            account.responses["fieldFetch"] = 0
         }.onAppear {
             account.responses["fieldFetch"] = 0
         }
@@ -87,7 +103,7 @@ struct CourtManageView: View {
 
 #Preview {
     NavigationStack {
-        //CourtManageView(court:Court(id: 1, name: "A", owner: "B", address: "C", courtNumber: 1, previewImage: UIImage())).environmentObject(Account())
-        OwnerControlView().environmentObject(Account())
+        CourtManageView(court:Court(id: 2, name: "A", owner: "B", address: "C", telephone: "1", previewImageURL: URL(string:"https://atlasreserve.ma/courtPrevImg/court2.png")!)).environmentObject(Account())
+        //OwnerControlView().environmentObject(Account())
     }
 }

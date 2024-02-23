@@ -19,22 +19,27 @@ struct AccountView: View {
                     .padding()
                 Spacer()
             }
-            NavigationLink (destination: OwnerControlView().environmentObject(account)) {
-                Text("Court Owner Control Panel").font(.title2).foregroundStyle(.black)
-                Spacer()
-                Image(systemName: "chevron.right").foregroundStyle(.black)
-            }.padding()
+            if account.isOwner {
+                NavigationLink (destination: OwnerControlView().environmentObject(account)) {
+                    Image(systemName: "hammer.fill").scaleEffect(1.2).foregroundStyle(.black)
+                    Text("Court Owner Control Panel").font(.title2).foregroundStyle(.black)
+                    Spacer()
+                    Image(systemName: "chevron.right").foregroundStyle(.black)
+                }.padding()
+            }
             NavigationLink (destination: ReservationHistory(courtID: -1).environmentObject(account)) {
+                Image(systemName: "book.fill").scaleEffect(1.2).foregroundStyle(.black)
                 Text("User Reservation History").font(.title2).foregroundStyle(.black)
                 Spacer()
                 Image(systemName: "chevron.right").foregroundStyle(.black)
             }.padding()
             NavigationLink (destination: ChangeLanguage()) {
+                Image(systemName: "globe").scaleEffect(1.2).foregroundStyle(.black)
                 Text("Change Language").font(.title2).foregroundStyle(.black)
                 Spacer()
                 Image(systemName: "chevron.right").foregroundStyle(.black)
             }.padding()
-            
+
                 
             Button("Log Out") {
                 showAlert = true
@@ -53,7 +58,7 @@ struct AccountView: View {
                     showAlert = false
                 }
             }.padding()
-        }.padding()
+        }
     }
 }
 

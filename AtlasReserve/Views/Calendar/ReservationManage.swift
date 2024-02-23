@@ -9,12 +9,14 @@ import SwiftUI
 
 struct ReservationManage: View {
     @EnvironmentObject var account: Account
+    @Environment(\.presentationMode) var presentationMode
     private var reservation: Reservation
     private var fieldID: Int
     private var courtID: Int
     private var yearMonthDay: DateFormatter = DateFormatter.yearMonthDay
     @State private var reasonForCancel: String = ""
     @State private var confirmed: Bool = false
+    @State private var toReturn: Bool? = false;
     init(reservation: Reservation, fieldID: Int, courtID: Int) {
         self.reservation = reservation
         self.fieldID = fieldID
@@ -54,19 +56,27 @@ struct ReservationManage: View {
                     Spacer()
                 }
             }.padding()
+                .onAppear {
+                    if toReturn ?? false {
+                        presentationMode.wrappedValue.dismiss()
+                    }
+                }
             VStack{
                 NavigationLink {
-                    RequestResult(loadingText: "Archiving Reservation", responseKey: "cancelReservation", successCode: 2) {code in
+                    RequestResult(loadingText: "Archiving Reservation", responseKey: "cancelReservation", successCode: 2, toReturn: $toReturn) {code in
                         Text("An unhandled error occured")
                     }.environmentObject(account)
                         .onAppear {
                             account.cancelReservation(resID: reservation.id, courtID: self.courtID, userID: account.id, reason: reasonForCancel, by: 1, resType: reservation.id, date: reservation.date, fieldID: self.fieldID)
                         }
                 } label: {
-                    ZStack{
-                        RoundedRectangle(cornerRadius: 10.0).foregroundStyle(.green).frame(width:300, height:35)
-                        Text("Mark this reservation as completed").foregroundStyle(.white)
-                    }
+                        Text("Mark this reservation as completed")
+                        .padding()
+                        .background(
+                            RoundedRectangle(cornerRadius: 10.0).foregroundStyle(.green)
+                        )
+                        .foregroundStyle(.white)
+                    
                 }.padding()
                 Text("reason-for-cancel")
                 TextField("Reason for cancelation", text: $reasonForCancel, prompt: Text("optional")).onChange(of: reasonForCancel) { _ in
@@ -75,25 +85,30 @@ struct ReservationManage: View {
                 
             }.padding()
             if !self.confirmed {
-                ZStack{
-                    RoundedRectangle(cornerRadius: 10.0).foregroundStyle(.red).frame(width:180, height:35)
-                    Button("Delete Reservation") {
-                        confirmed = true
-                    }.foregroundStyle(.white)
-                }.padding()
+                Button("Delete Reservation") {
+                    confirmed = true
+                }
+                .padding()
+                .background(
+                    RoundedRectangle(cornerRadius: 10.0).foregroundStyle(.red)
+                )
+                .foregroundStyle(.white)
             } else {
                 NavigationLink {
-                    RequestResult(loadingText: "Canceling Reservation", responseKey: "cancelReservation", successCode: 2) {code in
+                    RequestResult(loadingText: "Canceling Reservation", responseKey: "cancelReservation", successCode: 2, toReturn: $toReturn) {code in
                         Text("An unhandled error occured")
                     }.environmentObject(account)
                         .onAppear {
                             account.cancelReservation(resID: reservation.id, courtID: self.courtID, userID: account.id, reason: reasonForCancel, by: 2, resType: reservation.resType, date: reservation.date, fieldID: self.fieldID)
                         }
                 } label: {
-                    ZStack{
-                        RoundedRectangle(cornerRadius: 10.0).foregroundStyle(.red).frame(width:180, height:35)
-                        Text("Click Again to Confirm").foregroundStyle(.white)
-                    }
+                    Text("Click Again to Confirm")
+                        .padding()
+                        .background(
+                            RoundedRectangle(cornerRadius: 10.0).foregroundStyle(.red)
+                        )
+                        .foregroundStyle(.white)
+                    
                 }.padding()
                 
             }

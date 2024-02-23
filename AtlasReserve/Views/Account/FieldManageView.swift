@@ -25,19 +25,30 @@ struct CheckToggleStyle: ToggleStyle {
         .buttonStyle(.plain)
     }
 }
+//Optional Text Field: https://stackoverflow.com/a/61002589
+func ??<T>(lhs: Binding<Optional<T>>, rhs: T) -> Binding<T> {
+    Binding(
+        get: { lhs.wrappedValue ?? rhs },
+        set: { lhs.wrappedValue = $0 }
+    )
+}
+
 struct FieldManageView: View {
     @EnvironmentObject var account: Account
+    @Environment(\.presentationMode) var presentationMode
     private var field: Int // field can be passed as -1 -> this means that the View is being used as a FieldCreator
     private var courtID: Int = 0// courtID used for field creation, not used normally
-    @State private var isDatePickerVisible = false
+    @State private var isStartDatePickerVisible = false
+    @State private var isEndDatePickerVisible = false
     @State private var showAlert = false
     private var timeFormatter: DateFormatter = DateFormatter()
     @State private var pendingFieldType: Int = 1
     @State private var pendingFieldStartTime: Date = Date()
-    @State private var pendingFieldCount: Int = 1;
+    @State private var pendingFieldCount: Int? = 1;
     @State private var pendingFieldEndTime: Date = Date()
     @State private var pendingFieldAvailabilityArray: [Bool] = [false,false,false,false,false,false,false]
     private var readOnly: Bool = false; // This variable is set to true to remove the delete and create button
+    @State private var toReturn: Bool? = false;
     init(field: Int, courtID: Int = 0, readOnly: Bool = false) {
         self.field = field
         self.timeFormatter.dateFormat = "HH:mm"
@@ -48,7 +59,7 @@ struct FieldManageView: View {
     }
     
     var body: some View {
-        ScrollView (.horizontal) {
+        VStack {
             HStack {
                 VStack{
                     Text("Type")
@@ -57,40 +68,50 @@ struct FieldManageView: View {
                             Text(FieldType.convert[type]!)
                         }
                     }.disabled(self.readOnly)
-                }
+                }.frame(maxWidth: .infinity)
                 VStack{
                     Text("Count")
                     
-                    TextField(value: self.field >= 0 ? $account.fieldsManage[self.field].count : $pendingFieldCount, formatter: NumberFormatter.init()) {
+                    TextField(value: self.field >= 0 ? $account.fieldsManage[self.field].count : $pendingFieldCount ?? 1, formatter: NumberFormatter.init()) {
                         Text("Field Count")
                     }.textFieldStyle(.roundedBorder).multilineTextAlignment(.center)
                         .frame(maxWidth: 50)
                         .disabled(self.readOnly)
-                }
+                }.frame(maxWidth: .infinity)
                 VStack{
                     Text("Start Time")
-                    NavigationLink {
-                        DatePicker("Select a time", selection: (self.field >= 0 ) ? $account.fieldsManage[self.field].startTime : $pendingFieldStartTime, displayedComponents: .hourAndMinute)
-                            .labelsHidden()
-                            .datePickerStyle(WheelDatePickerStyle())
-                        
-                    } label: {
-                        Text(timeFormatter.string(from: (self.field >= 0 ) ? account.fieldsManage[self.field].startTime : pendingFieldStartTime))
-                    }.frame(minWidth: 100)
-                        .disabled(self.readOnly)
-                }.lineLimit(2, reservesSpace: true)
+                    Button(timeFormatter.string(from: (self.field >= 0 ) ? account.fieldsManage[self.field].startTime : pendingFieldStartTime)){
+                        isStartDatePickerVisible.toggle()
+                    }.disabled(self.readOnly)
+                        .sheet(isPresented: $isStartDatePickerVisible) {
+                        } content: {
+                            DatePicker("Select a time", selection: (self.field >= 0 ) ? $account.fieldsManage[self.field].startTime : $pendingFieldStartTime, displayedComponents: .hourAndMinute)
+                                .labelsHidden()
+                                .datePickerStyle(WheelDatePickerStyle())
+                            Button("ok") {
+                                isStartDatePickerVisible.toggle()
+                            }.buttonStyle(.borderedProminent)
+                        }
+
+                }.frame(maxWidth: .infinity)
                 VStack{
                     Text("End Time")
-                    NavigationLink {
-                        DatePicker("Select a time", selection: (self.field >= 0 ) ? $account.fieldsManage[self.field].endTime : $pendingFieldEndTime, displayedComponents: .hourAndMinute)
-                            .labelsHidden()
-                            .datePickerStyle(WheelDatePickerStyle())
-                        
-                    } label: {
-                        Text(timeFormatter.string(from: (self.field >= 0 ) ? account.fieldsManage[self.field].endTime : pendingFieldEndTime))
-                    }.frame(minWidth: 100)
-                        .disabled(self.readOnly)
-                }.lineLimit(2, reservesSpace: true)
+                    Button(timeFormatter.string(from: (self.field >= 0 ) ? account.fieldsManage[self.field].endTime : pendingFieldEndTime)){
+                        isEndDatePickerVisible.toggle()
+                    }.disabled(self.readOnly)
+                        .sheet(isPresented: $isEndDatePickerVisible) {
+                        } content: {
+                            DatePicker("Select a time", selection: (self.field >= 0 ) ? $account.fieldsManage[self.field].endTime : $pendingFieldEndTime, displayedComponents: .hourAndMinute)
+                                .labelsHidden()
+                                .datePickerStyle(WheelDatePickerStyle())
+                            Button("ok") {
+                                isEndDatePickerVisible.toggle()
+                            }.buttonStyle(.borderedProminent)
+                        }
+                }.frame(maxWidth: .infinity)
+                
+            }
+            HStack{
                 VStack{
                     Text("Mon")
                     Toggle("", isOn: (self.field >= 0 ) ? $account.fieldsManage[self.field].availabilityArray[0]: $pendingFieldAvailabilityArray[0]) .toggleStyle(CheckToggleStyle())
@@ -155,16 +176,15 @@ struct FieldManageView: View {
                     }
 
                 }
-                Spacer()
             }
             
             if self.field < 0 {
                 NavigationLink {
-                    RequestResult(loadingText: "Creating a Field", responseKey: "addField", successCode: 3) {code in
+                    RequestResult(loadingText: "Creating a Field", responseKey: "addField", successCode: 3, toReturn: $toReturn) {code in
                         Text(code == 1 ? "local-error-unreasonable" : "An unhandled error occured")
                         }.environmentObject(account)
                         .onAppear {
-                            account.addField(courtID: self.courtID, type: self.pendingFieldType, startTime: self.pendingFieldStartTime, endTime: self.pendingFieldEndTime, count: self.pendingFieldCount, availability: self.pendingFieldAvailabilityArray)
+                            account.addField(courtID: self.courtID, type: self.pendingFieldType, startTime: self.pendingFieldStartTime, endTime: self.pendingFieldEndTime, count: self.pendingFieldCount ?? 1, availability: self.pendingFieldAvailabilityArray)
                         }
                 } label: {
                     ZStack{
@@ -172,11 +192,13 @@ struct FieldManageView: View {
                         Text("Submit").foregroundStyle(.white)
                     }
                 }
-                
-                
-                
             }
-        }
+        }.padding(.vertical).background(HColor.rgb(r: 234, g: 234, b: 244))
+            .onAppear {
+                if self.field < 0 && toReturn ?? false {
+                    presentationMode.wrappedValue.dismiss()
+                }
+            }
     }
 }
 #Preview {

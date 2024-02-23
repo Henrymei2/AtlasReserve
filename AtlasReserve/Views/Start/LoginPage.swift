@@ -12,53 +12,56 @@ struct LoginPage: View {
     @Environment(\.dismiss) private var dismiss
     @State private var showAlert = false;
     @State private var alertText = "";
+    @State private var showResult = false;
     var body: some View {
-        VStack{
-            Text("log-in").font(.largeTitle)
-            Form{
-                HStack{
-                    Text("username")
-                    Text("/")
-                    Text("email")
-                    TextField("", text:$account.username)
+        if showResult {
+            RequestResult(loadingText: "Logging In", responseKey: "login", successCode: 4) { code in
+                if code == 1 {
+                    return Text("Cannot find Account associated with the given username / email")
+                } else if code == 2 {
+                    return Text("Incorrect Username or Password")
+                } else {
+                    return Text("An unhandled issue occured")
+                }
+            }
+        } else {
+            ScrollView{
+                Text("log-in").font(.largeTitle)
+                VStack{
+                    HStack{
+                        Text("Username / Email")
+                            .font(.title3)
+                        Spacer()
+                    }
+                    TextField("Username / Email", text:$account.username)
                         .autocorrectionDisabled(true)
                         .textInputAutocapitalization(.never)
-                }
-                HStack{
-                    Text("password")
-                    SecureField("", text:$account.password)
+                        .padding()
+                        .background(HColor.rgb(r: 244, g: 244, b: 250))
+                    HStack{
+                        Text("password")
+                            .font(.title3)
+                        Spacer()
+                    }
+                    SecureField("password", text:$account.password)
                         .textInputAutocapitalization(.never)
-                        
-                }
-                HStack{
-                    Spacer()
-                    Button("submit"){
-                        let loggedInResult = account.logIn(username: account.username, password: account.password)
-                        
-                        switch loggedInResult {
-                        case 3:
-                            account.loggedIn = true
-                            alertText = "login-success"
-                            UserDefaults.standard.set(true, forKey: "loggedIn")
-                            dismiss()
-                        case 2:
-                            alertText = "incorrect"
-                        case 1:
-                            alertText = "user-not-found"
-                        default:
-                            alertText = "an-error-occured"
-                        }
-                        showAlert = true;
-                        
-                        
-                        
-                    }.buttonStyle(.borderedProminent)
-                    Spacer()
-                }
+                        .padding()
+                        .background(HColor.rgb(r: 244, g: 244, b: 250))
+                    
+                
+                }.padding()
+                    HStack{
+                        Spacer()
+                        Button("submit"){
+                            account.logIn(username: account.username, password: account.password)
+                            showResult = true
+                        }.buttonStyle(.borderedProminent)
+                        Spacer()
+                    }
+                    
                 
             }
-        }.alert(NSLocalizedString(alertText, comment: ""), isPresented: $showAlert) {
-            Button("ok", role: .cancel){}
+            
         }
 
     }

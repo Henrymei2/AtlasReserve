@@ -26,7 +26,7 @@ struct CreateReservation: View {
                     DatePicker("Date: ", selection: $selectedDate, displayedComponents: .date)
                 }
                 HStack{
-                    Text("Field: ")
+                    Text("Choose a Field to place a Reservation on: ")
                     Picker("Select Field", selection: $selectedField) {
                         ForEach(account.fieldsManage, id: \.id) { field in
                             Text(String(field.id))

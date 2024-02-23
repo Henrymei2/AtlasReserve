@@ -9,17 +9,20 @@ import SwiftUI
 
 struct RequestResult: View {
     @EnvironmentObject var account: Account
-    private var loadingText: LocalizedStringKey;
-    private var responseKey: String;
-    private var successCode: Int;
-    private var fail: (Int) -> Text;
+    @Environment(\.presentationMode) var presentationMode
+    private var loadingText: LocalizedStringKey
+    private var responseKey: String
+    private var successCode: Int
+    private var fail: (Int) -> Text
     private var holdCodes: [Int]
-    init(loadingText: LocalizedStringKey, responseKey: String, successCode: Int, holdCodes: [Int] = [], fail: @escaping (Int) -> Text) {
+    @Binding var toReturn: Bool?
+    init(loadingText: LocalizedStringKey, responseKey: String, successCode: Int, holdCodes: [Int] = [], toReturn: Binding<Bool?>? = nil, fail: @escaping (Int) -> Text) {
         self.loadingText = loadingText
         self.responseKey = responseKey
         self.successCode = successCode
         self.fail = fail
         self.holdCodes = holdCodes
+        self._toReturn = toReturn ?? Binding.constant(nil)
     }
     var body: some View {
         VStack{
@@ -49,6 +52,13 @@ struct RequestResult: View {
                 if (account.responses[self.responseKey] != self.successCode) {
                     self.fail(account.responses[self.responseKey]!)
                 }
+                Button("ok") {
+                    account.responses[self.responseKey] = 0
+                    if account.responses[self.responseKey] == self.successCode {
+                        toReturn = true
+                    }
+                    presentationMode.wrappedValue.dismiss()
+                }.buttonStyle(.borderedProminent)
             }
         }
     }

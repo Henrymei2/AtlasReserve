@@ -12,7 +12,7 @@ func redirectSetting(){
 	UIApplication.shared.open(URL(string: UIApplication.openSettingsURLString)!)
 }
 struct StartingPage: View {
-	
+	@EnvironmentObject var account: Account
     var body: some View {
 		
 		VStack{
@@ -30,14 +30,14 @@ struct StartingPage: View {
 					.padding(3)
 				
 					NavigationLink(destination:
-								   RegisterPage()){
+									RegisterPage().environmentObject(account)){
 						
 						Text("sign-up").foregroundColor(Color.white).padding().font(.title3).bold()
 						
 					}.background(Color.yellow)
 						.clipShape(Capsule())
 					NavigationLink(destination:
-								   LoginPage()){
+								   LoginPage().environmentObject(account)){
 						HStack{
 							Text("already-have-account").font(.title3).foregroundColor(Color.gray)
 							Text("log-in").bold().foregroundColor(Color.gray)
@@ -57,7 +57,7 @@ struct StartingPage_Previews: PreviewProvider {
     static var previews: some View {
 		
 		NavigationStack{
-			StartingPage()
+			StartingPage().environmentObject(Account())
 		}
     }
 }

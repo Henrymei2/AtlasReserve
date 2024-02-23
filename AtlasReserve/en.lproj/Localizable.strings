@@ -16,7 +16,7 @@
 "password"="Password";
 "submit"="Submit";
 "confirm-password"="Confirm Password";
-"username-must"="Username must have at least 6 characters";
+"username-must"="Username must have at least 2 characters";
 "password-must"="Password must have at least 6 characters";
 "email-must"="Email must be in the correct format";
 "register-success"="Successfully created account";

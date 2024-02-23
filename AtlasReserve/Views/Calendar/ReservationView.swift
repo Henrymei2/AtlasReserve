@@ -10,8 +10,10 @@ import SwiftUI
 struct ReservationView: View {
     @EnvironmentObject var account: Account
     private let timeFormatter = DateFormatter()
-    init() {
+    private var onlyToday: Bool = false
+    init(onlyToday: Bool = false) {
         timeFormatter.dateFormat = "HH:mm"
+        self.onlyToday = onlyToday
     }
     var body: some View {
         if account.responses["courtFetch"] == 0 {
@@ -25,17 +27,13 @@ struct ReservationView: View {
         }else{
             LazyVStack() {
                 ForEach(account.reservations, id: \.id) { i in
-                    if (i.date == account.currentDay) {
+                    if !self.onlyToday || i.date == DateFormatter.yearMonthDay.date(from: DateFormatter.yearMonthDay.string(from:Date())) {
                         Divider()
                         NavigationLink {
                             ReservationManage(reservation: i, fieldID: i.field, courtID: i.courtID).environmentObject(account)
                         } label: {
                             HStack{
-                                HStack{
-                                    Text(account.courts[account.courts.firstIndex(where: { court in
-                                        return court.id == i.courtID
-                                    }) ?? 0].name)
-                                }
+                                Text(DateFormatter.yearMonthDay.string(from: i.date))
                                 Text(i.startTime + "-" + i.endTime)
                                 
                                 Image(systemName: "chevron.right").padding()
@@ -43,8 +41,10 @@ struct ReservationView: View {
                                     .foregroundStyle(.blue)
                             }.foregroundStyle(.black)
                         }
+                        
                     }
                 }
+                
             }
             Divider()
             
